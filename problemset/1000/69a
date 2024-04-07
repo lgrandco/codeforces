@@ -1,0 +1,6 @@
+r=0
+a=b=c=0
+for _ in range(int(input())):
+	d,e,f = map(int,input().split())
+	a,b,c = a+d,b+e,c+f
+print("YES" if a==b==c==0 else "NO")
