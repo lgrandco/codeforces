@@ -1,0 +1,55 @@
+chap 1
+27.
+    a: math.comb(5,2)/math.comb(8,2)
+    b: math.comb(5,1)*math.comb(3,1)/math.comb(8,2)
+    c: math.comb(5,1)/math.comb(8,1) | 5/8
+    d: math.comb(3,2)/math.comb(8,2)
+
+28.
+    a: 3 red = math.comb(3,3)/math.comb(8,3)
+    b: 2 red = math.comb(3,2)/math.comb(8,3)
+    c: blue blue red = 5/8 * 4/7 * 3/6 = 0.17857142857142858
+    d: red red red + red blue red + blue blue red =
+        3/8 * 2/7 * 1/6 + 3/8 * 5/7 * 2/6 +  5/8 * 4/7 * 3/6
+         = 0.2857142857142857
+
+
+34.
+ a
+    1 coin: (1/2)**3 = 1/8
+    1 weighed coin = 8/8
+    1 random coin among 3 = (1+1+8)/(3*8) = 10/24 = 5/12
+ b
+    8/(8+1+1) = 8/10 = 4/5
+
+
+
+44
+ a:
+    p2 * p2 * (p3 + p2*p1)
+ b:
+    if x==0: p1
+    else: p2 ** (x-1) * (p3 + p2*p1)
+ c:
+    p(0): p1
+    p(1): 1-p1
+
+    if p1 < (1-p2) / (2-p2)
+
+    prove that p(0) < p(1)
+
+    p1 < p2**(1-1) * (p3 + p2*p1)
+    p1 < p3 + p2*p1
+    2*p1 + p2 < p3 + p2*p1 + p1 + p2
+    2*p1 + p2 < p2*p1 + 1
+    2*p1 - p2*p1 < 1 - p2
+    p1*(2 - p2) < 1 - p2
+    p1 < (1-p2) / (2-p2)
+
+chap 2
+
+
+7
+
+1 2 3 4 4 7 7 8 9
+
