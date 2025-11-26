@@ -8,9 +8,7 @@ from bisect import bisect_left, bisect_right
 def solve():
     first_input = input()
     if len(first_input.split()) > 1:
-        x, y = map(int, first_input.split())
-        # x, y = map(int, input().split())
-        # n, x, y = map(int, first_input.split())
+        x, y = map(int, input().split())
         # n, x, y = map(int, input().split())
 
     elif first_input != "second":
@@ -24,7 +22,15 @@ def solve():
             # a = [e for e in input()]
             # a = input()
             a = list(map(int, input().split()))
-
+            n = max(a)
+            b = [e for e in a if e != n]
+            c = [e for e in a if e == n]
+            if b:
+                print(len(b), len(c))
+                p(b)
+                p(c)
+            else:
+                p(-1)
     elif first_input == "second":
         for _ in range(int(input())):
             n = int(input())

@@ -1,6 +1,7 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
 import sys, math
+import heapq
 from bisect import bisect_left, bisect_right
 
 
@@ -8,34 +9,40 @@ def solve():
     first_input = input()
     if len(first_input.split()) > 1:
         x, y = map(int, input().split())
-        n, x, y = map(int, input().split())
+        # n, x, y = map(int, input().split())
 
     elif first_input != "second":
         for _ in range(
             int(input()) if first_input == "first" else int(first_input)
         ):
-            r=0
-            for _ in range(10):
-                for i in range
-            n = int(input())
-            n, k = map(int, input().split())
-            n, k, x = map(int, input().split())
+            # n, k = map(int, input().split())
+            # n, k, x = map(int, input().split())
 
-            a = [e for e in input()]
-            a = input()
-            a = list(map(int, input().split()))
+            # a = [e for e in input()]
+            # a = input()
+            r = 0
+            for i in range(10):
+                a = input()
+                for j in range(10):
+                    if a[j] == "X":
+                        r += 5 - max(
+                            abs(4 - j) - (j >= 5),
+                            abs(4 - i) - (i >= 5),
+                        )
+            p(r)
 
     elif first_input == "second":
         for _ in range(int(input())):
             n = int(input())
-            n, k = map(int, input().split())
-            n, k, x = map(int, input().split())
+            # n, k = map(int, input().split())
+            # n, k, x = map(int, input().split())
 
-            a = [e for e in input()]
-            a = input()
+            # a = [e for e in input()]
+            # a = input()
             a = list(map(int, input().split()))
 
 
+# some classes were based on https://github.com/cheran-senthil/PyRival/tree/master/pyrival/data_structures
 class FenwickTree:
     def __init__(self, x):
         bit = self.bit = list(x)
@@ -142,6 +149,181 @@ class SortedList:
 
     def __repr__(self):
         return str(list(self))
+
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+        self.prev = None
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __repr__(self):
+        return self.__class__.__name__ + (
+            "({})".format(self.value) if self else "()"
+        )
+
+
+class LinkedList:
+    def __init__(self, iterable=None):
+        self.sentinel = Node(None)
+        self.sentinel.next = self.sentinel
+        self.sentinel.prev = self.sentinel
+        self.__len = 0
+        if iterable is not None:
+            self += iterable
+
+    def get_node(self, index):
+        node = self.sentinel
+        i = 0
+        while i <= index:
+            node = node.next
+            if node == self.sentinel:
+                break
+            i += 1
+        if node == self.sentinel:
+            node = None
+        return node
+
+    def __getitem__(self, index):
+        node = self.get_node(index)
+        return node.value
+
+    def __len__(self):
+        return self.__len
+
+    def __setitem__(self, index, value):
+        node = self.get_node(index)
+        node.value = value
+
+    def __delitem__(self, index):
+        node = self.get_node(index)
+        if node:
+            node.prev.next = node.next
+            if node.next:
+                node.next.prev = node.prev
+            node.prev = None
+            node.next = None
+            node.value = None
+            self.__len -= 1
+
+    def __repr__(self):
+        return str(self.to_list())
+
+    def to_list(self):
+        elts = []
+        curr = self.sentinel.next
+        while curr != self.sentinel:
+            elts.append(curr.value)
+            curr = curr.next
+        return elts
+
+    def append_node(self, node):
+        self.insert_between(node, self.sentinel.prev, self.sentinel)
+
+    def append(self, value):
+        node = Node(value)
+        self.insert_between(node, self.sentinel.prev, self.sentinel)
+
+    def appendleft(self, value):
+        node = Node(value)
+        self.insert_between(node, self.sentinel, self.sentinel.next)
+
+    def insert(self, index, value):
+        new_node = Node(value)
+        len_ = len(self)
+        if len_ == 0:
+            self.insert_between(new_node, self.sentinel, self.sentinel)
+        elif index >= 0 and index < len_:
+            node = self.get_node(index)
+            self.insert_between(new_node, node.prev, node)
+        elif index == len_:
+            self.insert_between(new_node, self.sentinel.prev, self.sentinel)
+        else:
+            raise IndexError
+
+    def insert_between(self, node, left_node, right_node):
+        if node and left_node and right_node:
+            node.prev = left_node
+            node.next = right_node
+            left_node.next = node
+            right_node.prev = node
+            self.__len += 1
+        else:
+            raise IndexError
+
+    def insert_after(self, node, value):
+        new_node = Node(value)
+        node.next.prev = new_node
+        new_node.next = node.next
+        node.next = new_node
+        new_node.prev = node
+        self.__len += 1
+
+    def merge_left(self, other):
+        self.sentinel.next.prev = other.sentinel.prev
+        other.sentinel.prev.next = self.sentinel.next
+        self.sentinel.next = other.sentinel.next
+        self.sentinel.next.prev = self.sentinel
+        self.__len += other.__len
+
+    def merge_right(self, other):
+        self.sentinel.prev.next = other.sentinel.next
+        other.sentinel.next.prev = self.sentinel.prev
+        self.sentinel.prev = other.sentinel.prev
+        self.sentinel.prev.next = self.sentinel
+        self.__len += other.__len
+
+    def pop(self, node=None):
+        if node is None:
+            node = self.sentinel.prev
+        if self.__len < 1:
+            raise IndexError
+        node.prev.next = node.next
+        node.next.prev = node.prev
+        self.__len -= 1
+        return node.value
+
+    def before(self, node):
+        return node.prev.prev if node.prev == self.sentinel else node.prev
+
+    left = before
+    prev = before
+
+    def after(self, node):
+        return node.next.next if node.next == self.sentinel else node.next
+
+    right = after
+    next = after
+
+    def get_min_node(self):
+        if self.__len == 0:
+            return None
+        curr = self.sentinel.next
+        min_node = curr
+        while curr != self.sentinel:
+            if curr.value < min_node.value:
+                min_node = curr
+            curr = curr.next
+
+        return min_node
+
+    def get_max_node(self):
+        if self.__len == 0:
+            return None
+        curr = self.sentinel.next
+        min_node = curr
+        while curr != self.sentinel:
+            if curr.value > min_node.value:
+                min_node = curr
+            curr = curr.next
+
+        return min_node
 
 
 def input():
