@@ -1,35 +1,35 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
-import sys, math
-import heapq
+from math import *
+from heapq import *
+import sys, inspect, re
 from bisect import bisect_left, bisect_right
 
 
 def solve():
     first_input = input()
     if len(first_input.split()) > 1:
-        x, y = map(int, input().split())
+        x, y = map(int, first_input.split())
+        # x, y = map(int, input().split())
+        # n, x, y = map(int, first_input.split())
         # n, x, y = map(int, input().split())
 
     elif first_input != "second":
         for _ in range(
             int(input()) if first_input == "first" else int(first_input)
         ):
+            n = int(input())
             # n, k = map(int, input().split())
             # n, k, x = map(int, input().split())
 
             # a = [e for e in input()]
             # a = input()
-            r = 0
-            for i in range(10):
-                a = input()
-                for j in range(10):
-                    if a[j] == "X":
-                        r += 5 - max(
-                            abs(4 - j) - (j >= 5),
-                            abs(4 - i) - (i >= 5),
-                        )
-            p(r)
+            a = list(map(int, input().split()))
+            l = len(set(a))
+            while l not in a:
+                a.append(l)
+                l = len(set(a))
+            print(len(set(a)))
 
     elif first_input == "second":
         for _ in range(int(input())):
@@ -346,6 +346,28 @@ def p2(x):
         sys.stdout.write(" ".join(map(str, x)) + "\n")
     else:
         sys.stdout.write(str(x) + "\n")
+
+
+def debug(*args):
+    frame = inspect.currentframe()
+    try:
+        prev_frame = frame.f_back
+
+        call_info = inspect.getframeinfo(prev_frame)
+        code_context = call_info.code_context[0].strip()
+
+        match = re.search(r"debug\((.*)\)", code_context)
+
+        if match:
+            arg_names = [name.strip() for name in match.group(1).split(",")]
+
+            for name, value in zip(arg_names, args):
+                print(f"{name} = {value}")
+        else:
+            print("Could not parse variable names:", args)
+
+    finally:
+        del frame
 
 
 if __name__ == "__main__":

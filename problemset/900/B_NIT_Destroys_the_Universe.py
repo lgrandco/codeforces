@@ -1,14 +1,17 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
-import sys, math
-import heapq
+from math import *
+from heapq import *
+import sys, inspect, re
 from bisect import bisect_left, bisect_right
 
 
 def solve():
     first_input = input()
     if len(first_input.split()) > 1:
-        x, y = map(int, input().split())
+        x, y = map(int, first_input.split())
+        # x, y = map(int, input().split())
+        # n, x, y = map(int, first_input.split())
         # n, x, y = map(int, input().split())
 
     elif first_input != "second":
@@ -22,13 +25,11 @@ def solve():
             # a = [e for e in input()]
             # a = input()
             a = list(map(int, input().split()))
-            b = []
-            for e in a:
-                if b and e < b[-1]:
-                    b += (e,)
-                b += (e,)
-            p(len(b))
-            p(b)
+            r = 0
+            for i in range(n):
+                if a[i] != 0 and (i < 1 or a[i - 1] == 0):
+                    r += 1
+            p(min(2, r))
 
     elif first_input == "second":
         for _ in range(int(input())):
@@ -345,6 +346,50 @@ def p2(x):
         sys.stdout.write(" ".join(map(str, x)) + "\n")
     else:
         sys.stdout.write(str(x) + "\n")
+
+
+def debug(*args):
+    frame = inspect.currentframe()
+    try:
+        prev_frame = frame.f_back
+
+        call_info = inspect.getframeinfo(prev_frame)
+        code_context = call_info.code_context[0].strip()
+
+        match = re.search(r"debug\((.*)\)", code_context)
+
+        if match:
+            arg_names = [name.strip() for name in match.group(1).split(",")]
+
+            for name, value in zip(arg_names, args):
+                print(f"{name} = {value}", file=sys.stderr)
+        else:
+            print("Could not parse variable names:", args, file=sys.stderr)
+
+    finally:
+        del frame
+
+
+def debug2(*args):
+    frame = inspect.currentframe()
+    try:
+        prev_frame = frame.f_back
+
+        call_info = inspect.getframeinfo(prev_frame)
+        code_context = call_info.code_context[0].strip()
+
+        match = re.search(r"debug\((.*)\)", code_context)
+
+        if match:
+            arg_names = [name.strip() for name in match.group(1).split(",")]
+
+            for name, value in zip(arg_names, args):
+                print(f"{name} = {value}")
+        else:
+            print("Could not parse variable names:", args)
+
+    finally:
+        del frame
 
 
 if __name__ == "__main__":

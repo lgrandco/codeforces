@@ -28,9 +28,8 @@ def solve():
             suff = [a[-1]] * n
             for i in range(1, n):
                 pref[i] = a[i] * pref[i - 1]
-                suff[-i - 1] = a[i] * suff[i]
-            # print(pref, suff)
-            for i in range(i - 1):
+                suff[-i - 1] = a[-i - 1] * suff[-i]
+            for i in range(n - 1):
                 if pref[i] == suff[i + 1]:
                     p(i + 1)
                     break

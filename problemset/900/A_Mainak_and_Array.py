@@ -1,7 +1,8 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
-import sys, math
-import heapq
+from math import *
+from heapq import *
+import sys, inspect, re
 from bisect import bisect_left, bisect_right
 
 
@@ -17,28 +18,21 @@ def solve():
         for _ in range(
             int(input()) if first_input == "first" else int(first_input)
         ):
-            # n = int(input())
+            n = int(input())
             # n, k = map(int, input().split())
-            n, k, x = map(int, input().split())
+            # n, k, x = map(int, input().split())
 
-            if x != 1:
-                p("YES")
-                p(n)
-                p([1] * n)
-            else:
-                if k >= 2 and n % 2 < 1 or k > 2:
-                    p("YES")
-                    if n % 2 < 1:
-                        p(n // 2)
-                        p([2] * (n // 2))
-                    else:
-                        p((n // 2))
-                        p([3] + [2] * (n // 2 - 1))
-                else:
-                    p("NO")
             # a = [e for e in input()]
             # a = input()
-            # a = list(map(int, input().split()))
+            a = list(map(int, input().split()))
+            # p(max(a) - min(a))
+            p(
+                max(
+                    a[-1] - min(a[:-1], default=a[-1]),
+                    max(a[1:], default=a[0]) - a[0],
+                    max([a[i] - a[i + 1] for i in range(n - 1)], default=0),
+                )
+            )
 
     elif first_input == "second":
         for _ in range(int(input())):
@@ -355,6 +349,50 @@ def p2(x):
         sys.stdout.write(" ".join(map(str, x)) + "\n")
     else:
         sys.stdout.write(str(x) + "\n")
+
+
+def debug(*args):
+    frame = inspect.currentframe()
+    try:
+        prev_frame = frame.f_back
+
+        call_info = inspect.getframeinfo(prev_frame)
+        code_context = call_info.code_context[0].strip()
+
+        match = re.search(r"debug\((.*)\)", code_context)
+
+        if match:
+            arg_names = [name.strip() for name in match.group(1).split(",")]
+
+            for name, value in zip(arg_names, args):
+                print(f"{name} = {value}", file=sys.stderr)
+        else:
+            print("Could not parse variable names:", args, file=sys.stderr)
+
+    finally:
+        del frame
+
+
+def debug2(*args):
+    frame = inspect.currentframe()
+    try:
+        prev_frame = frame.f_back
+
+        call_info = inspect.getframeinfo(prev_frame)
+        code_context = call_info.code_context[0].strip()
+
+        match = re.search(r"debug\((.*)\)", code_context)
+
+        if match:
+            arg_names = [name.strip() for name in match.group(1).split(",")]
+
+            for name, value in zip(arg_names, args):
+                print(f"{name} = {value}")
+        else:
+            print("Could not parse variable names:", args)
+
+    finally:
+        del frame
 
 
 if __name__ == "__main__":

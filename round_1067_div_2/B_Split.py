@@ -17,28 +17,36 @@ def solve():
         for _ in range(
             int(input()) if first_input == "first" else int(first_input)
         ):
-            # n = int(input())
+            n = int(input())
             # n, k = map(int, input().split())
-            n, k, x = map(int, input().split())
+            # n, k, x = map(int, input().split())
 
-            if x != 1:
-                p("YES")
-                p(n)
-                p([1] * n)
-            else:
-                if k >= 2 and n % 2 < 1 or k > 2:
-                    p("YES")
-                    if n % 2 < 1:
-                        p(n // 2)
-                        p([2] * (n // 2))
-                    else:
-                        p((n // 2))
-                        p([3] + [2] * (n // 2 - 1))
-                else:
-                    p("NO")
             # a = [e for e in input()]
             # a = input()
-            # a = list(map(int, input().split()))
+            bad = 0
+            a = list(map(int, input().split()))
+            r = 0
+            needcomplete = 0
+            cancomplete = 0
+            ccp = 0
+            v = Counter(a).values
+            for k, v in Counter(a).items():
+                if v == 1:
+                    r += 1
+                    cancomplete += 1
+                elif v % 2 < 1 and v / 2 % 2:
+                    r += 2
+                elif v % 2:
+                    r += 1
+                    cancomplete += 1
+                else:
+                    needcomplete += 1
+                    ccp += 1
+            p(
+                r
+                + needcomplete // 2 * 4
+                + min(needcomplete % 2, cancomplete) * 2
+            )
 
     elif first_input == "second":
         for _ in range(int(input())):

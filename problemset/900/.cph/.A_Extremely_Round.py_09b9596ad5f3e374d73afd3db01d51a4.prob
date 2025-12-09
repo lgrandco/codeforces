@@ -1,0 +1,1 @@
+{"name":"A. Extremely Round","url":"https://codeforces.com/contest/1766/problem/A","interactive":false,"memoryLimit":0,"timeLimit":3000,"group":"Codeforces - Educational Codeforces Round 139 (Rated for Div. 2)","tests":[{"id":1764365099821,"input":"5\n9\n42\n13\n100\n111\n","output":"9\n13\n10\n19\n19\n"}],"srcPath":"/Users/leo/codeforces/problemset/900/A_Extremely_Round.py"}

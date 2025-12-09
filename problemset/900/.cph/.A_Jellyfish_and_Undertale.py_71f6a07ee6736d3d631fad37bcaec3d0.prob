@@ -1,0 +1,1 @@
+{"name":"A. Jellyfish and Undertale","url":"https://codeforces.com/contest/1875/problem/A","interactive":false,"memoryLimit":0,"timeLimit":3000,"group":"Codeforces - Codeforces Round 901 (Div. 2)","tests":[{"id":1765191643333,"input":"2\n5 3 3\n1 1 7\n7 1 5\n1 2 5 6 8\n","output":"9\n21\n"}],"srcPath":"/Users/leo/codeforces/problemset/900/A_Jellyfish_and_Undertale.py"}

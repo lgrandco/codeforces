@@ -21,24 +21,10 @@ def solve():
             # n, k = map(int, input().split())
             n, k, x = map(int, input().split())
 
-            if x != 1:
-                p("YES")
-                p(n)
-                p([1] * n)
-            else:
-                if k >= 2 and n % 2 < 1 or k > 2:
-                    p("YES")
-                    if n % 2 < 1:
-                        p(n // 2)
-                        p([2] * (n // 2))
-                    else:
-                        p((n // 2))
-                        p([3] + [2] * (n // 2 - 1))
-                else:
-                    p("NO")
             # a = [e for e in input()]
             # a = input()
             # a = list(map(int, input().split()))
+            p(((n - k + 1) + n) * k / 2 >= x and (k + 1) * k / 2 <= x)
 
     elif first_input == "second":
         for _ in range(int(input())):

@@ -18,27 +18,39 @@ def solve():
             int(input()) if first_input == "first" else int(first_input)
         ):
             # n = int(input())
-            # n, k = map(int, input().split())
-            n, k, x = map(int, input().split())
+            n, k = map(int, input().split())
+            # n, k, x = map(int, input().split())
 
-            if x != 1:
-                p("YES")
-                p(n)
-                p([1] * n)
-            else:
-                if k >= 2 and n % 2 < 1 or k > 2:
-                    p("YES")
-                    if n % 2 < 1:
-                        p(n // 2)
-                        p([2] * (n // 2))
-                    else:
-                        p((n // 2))
-                        p([3] + [2] * (n // 2 - 1))
-                else:
-                    p("NO")
             # a = [e for e in input()]
             # a = input()
-            # a = list(map(int, input().split()))
+            a = list(map(int, input().split()))
+            b = list(map(int, input().split()))
+            m = -9999999
+            curr = 0
+            if k % 2:
+                f = 1
+            else:
+                f = 0
+            last = 0
+            diff = 0
+            currdiff = 0
+            if k % 2:
+                for i, e in enumerate(a):
+                    if e - currdiff + curr + max(
+                        currdiff, b[i]
+                    ) > e - currdiff + max(currdiff, b[i]):
+                        curr = e + curr - currdiff + max(currdiff, b[i])
+                        currdiff = max(currdiff, b[i])
+                    else:
+                        curr = e - currdiff + max(currdiff, b[i])
+                        currdiff = max(currdiff, b[i])
+                    m = max(curr, m)
+                p(m)
+            else:
+                for i, e in enumerate(a):
+                    curr = max(e, curr + e)
+                    m = max(curr, m)
+                p(m)
 
     elif first_input == "second":
         for _ in range(int(input())):

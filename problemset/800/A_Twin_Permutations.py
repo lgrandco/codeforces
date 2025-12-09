@@ -24,13 +24,7 @@ def solve():
             # a = [e for e in input()]
             # a = input()
             a = list(map(int, input().split()))
-            b = [0] * n
-            c = [i for i in range(1, n + 1)]
-            for i in range(n - 1, -1, -1):
-                j = -1
-                while i < n - 1 and c[j] + a[i] > a[i + 1] + b[i + 1]:
-                    j -= 1
-                b[i] = c.pop(j)
+            b = [n - a[i] + 1 for i in range(n)]
             p(b)
 
     elif first_input == "second":

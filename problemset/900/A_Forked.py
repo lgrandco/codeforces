@@ -19,26 +19,26 @@ def solve():
         ):
             # n = int(input())
             # n, k = map(int, input().split())
-            n, k, x = map(int, input().split())
+            # n, k, x = map(int, input().split())
 
-            if x != 1:
-                p("YES")
-                p(n)
-                p([1] * n)
-            else:
-                if k >= 2 and n % 2 < 1 or k > 2:
-                    p("YES")
-                    if n % 2 < 1:
-                        p(n // 2)
-                        p([2] * (n // 2))
-                    else:
-                        p((n // 2))
-                        p([3] + [2] * (n // 2 - 1))
-                else:
-                    p("NO")
             # a = [e for e in input()]
             # a = input()
-            # a = list(map(int, input().split()))
+            # a = list(map(int, inpxut().split()))
+            a, b = map(int, input().split())
+            xk, yk = map(int, input().split())
+            xq, yq = map(int, input().split())
+            k = set()
+            q = set()
+            for ny in [-1, 1]:
+                for nx in [-1, 1]:
+                    k.add((xk + nx * a, yk + ny * b))
+                    k.add((xk + nx * b, yk + ny * a))
+                    q.add((xq + nx * a, yq + ny * b))
+                    q.add((xq + nx * b, yq + ny * a))
+
+            # print(k)
+            # print(q)
+            print(len(k & q))
 
     elif first_input == "second":
         for _ in range(int(input())):

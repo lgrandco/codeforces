@@ -1,0 +1,1 @@
+{"name":"B. Make it Divisible by 25","url":"https://codeforces.com/contest/1593/problem/B","interactive":false,"memoryLimit":0,"timeLimit":3000,"group":"Codeforces - Codeforces Round 748 (Div. 3)","tests":[{"id":1765117965263,"input":"5\n100\n71345\n3259\n50555\n2050047\n","output":"0\n3\n1\n3\n2\n"}],"srcPath":"/Users/leo/codeforces/problemset/900/B_Make_it_Divisible_by_25.py"}

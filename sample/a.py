@@ -1,7 +1,8 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
-import sys, math
-import heapq
+from math import *
+from heapq import *
+import sys, inspect, re
 from bisect import bisect_left, bisect_right
 
 
@@ -324,22 +325,91 @@ def input():
     return sys.stdin.readline().strip()
 
 
-def p(x):
-    if isinstance(x, bool):
-        sys.stdout.write("YES\n" if x else "NO\n")
-    elif isinstance(x, list) or isinstance(x, tuple):
-        sys.stdout.write(" ".join(map(str, x)) + "\n")
+def p(*args):
+    if args and isinstance(args[0], bool):
+        sys.stdout.write("YES\n" if args[0] else "NO\n")
     else:
-        sys.stdout.write(str(x) + "\n")
+        sys.stdout.write(" ".join(str(e) for e in args) + "\n")
 
 
-def p2(x):
-    if isinstance(x, bool):
-        sys.stdout.write("Yes\n" if x else "No\n")
-    elif isinstance(x, list) or isinstance(x, tuple):
-        sys.stdout.write(" ".join(map(str, x)) + "\n")
+def p2(*args):
+    if args and isinstance(args[0], bool):
+        sys.stdout.write("Yes\n" if args[0] else "No\n")
     else:
-        sys.stdout.write(str(x) + "\n")
+        sys.stdout.write(" ".join(str(e) for e in args) + "\n")
+
+
+def YES():
+    sys.stdout.write("YES\n")
+
+
+def NO():
+    sys.stdout.write("NO\n")
+
+
+def Yes():
+    sys.stdout.write("Yes\n")
+
+
+def No():
+    sys.stdout.write("No\n")
+
+
+def debug(*args):
+    frame = inspect.currentframe()
+    try:
+        prev_frame = frame.f_back
+
+        call_info = inspect.getframeinfo(prev_frame)
+        code_context = call_info.code_context[0].strip()
+
+        match = re.search(r"debug\((.*)\)", code_context)
+
+        if match:
+            arg_names = [name.strip() for name in match.group(1).split(",")]
+
+            for name, value in zip(arg_names, args):
+                print(f"{name} = {value}", file=sys.stderr)
+        else:
+            print("Could not parse variable names:", args, file=sys.stderr)
+
+    finally:
+        del frame
+
+
+def debug2(*args):
+    frame = inspect.currentframe()
+    try:
+        prev_frame = frame.f_back
+
+        call_info = inspect.getframeinfo(prev_frame)
+        code_context = call_info.code_context[0].strip()
+
+        match = re.search(r"debug2\((.*)\)", code_context)
+
+        if match:
+            arg_names = [name.strip() for name in match.group(1).split(",")]
+
+            for name, value in zip(arg_names, args):
+                print(f"{name} = {value}")
+        else:
+            print("Could not parse variable names:", args)
+
+    finally:
+        del frame
+
+
+from random import getrandbits
+
+RANDOM = getrandbits(32)
+
+
+class Wrapper(int):
+    def __init__(self, x):
+        int.__init__(x)
+
+    def __hash__(self):
+        return super(Wrapper, self).__hash__() ^ RANDOM
 
 
 if __name__ == "__main__":

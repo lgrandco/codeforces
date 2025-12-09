@@ -23,9 +23,7 @@ def solve():
 
             # a = [e for e in input()]
             # a = input()
-            # a = list(map(int, input().split()))
-            p(int(n[0]) + 9 * (len(n) - 1))
-
+            print(int(n[0]) + 9 * (len(n) - 1))
     elif first_input == "second":
         for _ in range(int(input())):
             n = int(input())
