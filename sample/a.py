@@ -38,6 +38,9 @@ def solve():
 
 
 # some classes were based on https://github.com/cheran-senthil/PyRival/tree/master/pyrival/data_structures
+from bisect import bisect_left, bisect_right
+
+
 class FenwickTree:
     def __init__(self, x):
         bit = self.bit = list(x)
@@ -70,9 +73,6 @@ class FenwickTree:
                 idx = right_idx
                 k -= self.bit[idx]
         return idx + 1, k
-
-
-get = input
 
 
 class SortedList:
@@ -108,12 +108,73 @@ class SortedList:
             self.fenwick = FenwickTree(self.micro_size)
             self.macro.insert(i, self.micros[i + 1][0])
 
-    def pop(self, k=-1):
-        i, j = self._find_kth(k)
+    def _delete(self, i, j):
+        self.micros[i].pop(j)
         self.size -= 1
         self.micro_size[i] -= 1
         self.fenwick.update(i, -1)
-        return self.micros[i].pop(j)
+        if len(self.micros[i]) == 0 and len(self.micros) > 1:
+            del self.micros[i]
+            del self.micro_size[i]
+            self.macro = [m[0] for m in self.micros[1:]]
+            self.fenwick = FenwickTree(self.micro_size)
+
+    def remove(self, x):
+        # Find the block where x 'should' be
+        i = bisect_right(self.macro, x)
+
+        # Check block i (Standard case)
+        if i < len(self.micros):
+            j = bisect_left(self.micros[i], x)
+            if j < len(self.micros[i]) and self.micros[i][j] == x:
+                self._delete(i, j)
+                return
+
+        # Check block i-1 (Boundary/Duplicate case)
+        # This is the fix for "1 not in list" error
+        if i > 0:
+            j = bisect_left(self.micros[i - 1], x)
+            if j < len(self.micros[i - 1]) and self.micros[i - 1][j] == x:
+                self._delete(i - 1, j)
+                return
+
+        raise ValueError(f"{x} not in list")
+
+    def pop(self, k=-1):
+        i, j = self._find_kth(k)
+        val = self.micros[i][j]  # Capture value before delete
+        self._delete(i, j)
+        return val
+
+    def __getitem__(self, k):
+        i, j = self._find_kth(k)
+        return self.micros[i][j]
+
+    def count(self, x):
+        return self.bisect_right(x) - self.bisect_left(x)
+
+    def __contains__(self, x):
+        return self.count(x) > 0
+
+    def bisect_left(self, x):
+        i = bisect_left(self.macro, x)
+        return self.fenwick(i) + bisect_left(self.micros[i], x)
+
+    def bisect_right(self, x):
+        i = bisect_right(self.macro, x)
+        return self.fenwick(i) + bisect_right(self.micros[i], x)
+
+    def _find_kth(self, k):
+        return self.fenwick.find_kth(k + self.size if k < 0 else k)
+
+    def __len__(self):
+        return self.size
+
+    def __iter__(self):
+        return (x for micro in self.micros for x in micro)
+
+    def __repr__(self):
+        return str(list(self))
 
     def __getitem__(self, k):
         i, j = self._find_kth(k)
@@ -353,6 +414,21 @@ def Yes():
 
 def No():
     sys.stdout.write("No\n")
+
+
+def is_prime(n):
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
 
 
 def debug(*args):

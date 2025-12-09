@@ -26,7 +26,7 @@ def solve():
             # a = input()
             # a = list(map(int, input().split()))
             if n % 2 < 1 and n >= 4:
-                print(ceil(n / 6), ceil(n / 4))
+                print(ceil(n / 6), n // 4)
             else:
                 print(-1)
     elif first_input == "second":
