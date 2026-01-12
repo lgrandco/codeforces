@@ -6,8 +6,6 @@ import sys, inspect, re
 from bisect import bisect_left, bisect_right
 from operator import *
 from string import *
-from random import randint
-from random import *
 
 MOD = 998244353
 MOD7 = 1000000007
@@ -28,27 +26,16 @@ def solve():
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
-    a = list(map(int, input().split()))
+    # a = list(map(int, input().split()))
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
-
-
-def gen():
-    print(1)
-    n = randint(1, 5)
-    print(n)
-    # n, q = [randint(1, 100) for _ in range(2)]
-    # print(n, q)
-    a = [randint(1, 10) for _ in range(n)]
-    print(*a)
-    # for _ in range(q):
-    #     print(*[randint(1, 100) for _ in range(2)])
-
-
-def brute():
-    n = input()
-    a = list(map(int, input().split()))
+    if n == 2:
+        print(2)
+    elif n == 3:
+        print(3)
+    else:
+        print(n % 2)
 
 
 def solve2():
@@ -63,11 +50,6 @@ def solve2():
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
-
-
-def brute2():
-    n = input()
-    a = list(map(int, input().split()))
 
 
 # some classes were based on https://github.com/cheran-senthil/PyRival/tree/master/pyrival/data_structures
@@ -602,95 +584,7 @@ class SegmentTree:
         return "SegmentTree({0})".format(self.data)
 
 
-class LazySegmentTree:
-    def __init__(self, data, default=0, func=max):
-        """initialize the lazy segment tree with data"""
-        self._default = default
-        self._func = func
-
-        self._len = len(data)
-        self._size = _size = 1 << (self._len - 1).bit_length()
-        self._lazy = [0] * (2 * _size)
-
-        self.data = [default] * (2 * _size)
-        self.data[_size : _size + self._len] = data
-        for i in reversed(range(_size)):
-            self.data[i] = func(self.data[i + i], self.data[i + i + 1])
-
-    def __len__(self):
-        return self._len
-
-    def _push(self, idx):
-        """push query on idx to its children"""
-        # Let the children know of the queries
-        q, self._lazy[idx] = self._lazy[idx], 0
-
-        self._lazy[2 * idx] += q
-        self._lazy[2 * idx + 1] += q
-        self.data[2 * idx] += q
-        self.data[2 * idx + 1] += q
-
-    def _update(self, idx):
-        """updates the node idx to know of all queries applied to it via its ancestors"""
-        for i in reversed(range(1, idx.bit_length())):
-            self._push(idx >> i)
-
-    def _build(self, idx):
-        """make the changes to idx be known to its ancestors"""
-        idx >>= 1
-        while idx:
-            self.data[idx] = (
-                self._func(self.data[2 * idx], self.data[2 * idx + 1])
-                + self._lazy[idx]
-            )
-            idx >>= 1
-
-    def add(self, start, stop, value):
-        """lazily add value to [start, stop)"""
-        start = start_copy = start + self._size
-        stop = stop_copy = stop + self._size
-        while start < stop:
-            if start & 1:
-                self._lazy[start] += value
-                self.data[start] += value
-                start += 1
-            if stop & 1:
-                stop -= 1
-                self._lazy[stop] += value
-                self.data[stop] += value
-            start >>= 1
-            stop >>= 1
-
-        # Tell all nodes above of the updated area of the updates
-        self._build(start_copy)
-        self._build(stop_copy - 1)
-
-    def query(self, start, stop, default=0):
-        """func of data[start, stop)"""
-        start += self._size
-        stop += self._size
-
-        # Apply all the lazily stored queries
-        self._update(start)
-        self._update(stop - 1)
-
-        res = default
-        while start < stop:
-            if start & 1:
-                res = self._func(res, self.data[start])
-                start += 1
-            if stop & 1:
-                stop -= 1
-                res = self._func(res, self.data[stop])
-            start >>= 1
-            stop >>= 1
-        return res
-
-    def __repr__(self):
-        return "LazySegmentTree({0})".format(self.data)
-
-
-def factor(n):
+def factor(n: int):
     ret = []
     i = 2
     while i * i <= n:
@@ -704,11 +598,6 @@ def factor(n):
 
 
 if __name__ == "__main__":
-    argc = len(sys.argv)
-    if argc > 1 and sys.argv[1] == "gen":
-        gen()
-        sys.exit(0)
-
     if interactive:
         first_input = input()
     else:
@@ -726,18 +615,10 @@ if __name__ == "__main__":
         first_input = int(input())
     else:
         first_input = 1
-    if argc > 1 and sys.argv[1] == "brute":
-        if is_second:
-            for _ in range(first_input):
-                brute2()
-        else:
-            for _ in range(first_input):
-                brute()
+    if is_second:
+        for _ in range(first_input):
+            solve2()
     else:
-        if is_second:
-            for _ in range(first_input):
-                solve2()
-        else:
-            for _ in range(first_input):
-                solve()
+        for _ in range(first_input):
+            solve()
     fflush()
