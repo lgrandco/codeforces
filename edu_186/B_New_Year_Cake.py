@@ -1,49 +1,67 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
-from math import inf, gcd, factorial, sqrt, ceil, floor, log, log2, log10
+from math import inf, gcd, lcm, factorial, sqrt, ceil, floor, log, log2, log10
 from heapq import *
 import sys, inspect, re
 from bisect import bisect_left, bisect_right
 from operator import *
-from string import *
-
-MOD = 998244353
-MOD7 = 1000000007
-
-ins = []
-outs = []
-idx = -1
-one_test = False
-interactive = False
 
 
 def solve():
-    # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
-    # for i in range(k):
-    #     u, v = map(int, input().split())
-    #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
-    # a = [e for e in input()]
-    a = list(map(int, input().split()))
-    # b = list(map(int, input().split()))
-    # a = input()
-    # b = input()
+    first_input = input()
+    if len(first_input.split()) > 1:
+        x, y = map(int, first_input.split())
+        # x, y = map(int, input().split())
+        # n, x, y = map(int, first_input.split())
+        # n, x, y = map(int, input().split())
 
+    elif first_input != "second":
+        for _ in range(
+            int(input()) if first_input == "first" else int(first_input)
+        ):
+            # n = int(input())
+            n, k = sorted(map(int, input().split()))
+            # n, k, x = map(int, input().split())
 
-def solve2():
-    n = int(input())
-    # n, k = map(int, input().split())
-    # for i in range(k):
-    #     u, v = map(int, input().split())
-    #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
-    # a = [e for e in input()]
-    a = list(map(int, input().split()))
-    # b = list(map(int, input().split()))
-    # a = input()
-    # b = input()
+            # a = [e for e in input()]
+            # a = input()
+            i = 0
+            cur = 1
+            _min = 0
+            n2 = k
+            k2 = n
+            while True:
+                if i % 2 < 1:
+                    k -= cur
+                else:
+                    n -= cur
+                if n < 0 or k < 0:
+                    break
+                i += 1
+                cur *= 2
+            _min = i
+
+            i = 0
+            cur = 1
+            while True:
+                if i % 2 < 1:
+                    k2 -= cur
+                else:
+                    n2 -= cur
+                if n2 < 0 or k2 < 0:
+                    break
+                i += 1
+                cur *= 2
+            print(max(i, _min))
+    elif first_input == "second":
+        for _ in range(int(input())):
+            n = int(input())
+            # n, k = map(int, input().split())
+            # n, k, x = map(int, input().split())
+
+            # a = [e for e in input()]
+            # a = input()
+            a = list(map(int, input().split()))
 
 
 # some classes were based on https://github.com/cheran-senthil/PyRival/tree/master/pyrival/data_structures
@@ -391,50 +409,38 @@ class LinkedList:
         return min_node
 
 
-if interactive:
+def input():
+    return sys.stdin.readline().strip()
 
-    def input():
-        return sys.stdin.readline().strip()
 
-    def p(*args):
-        if args and isinstance(args[0], bool):
-            sys.stdout.write("YES\n" if args[0] else "NO\n")
-        else:
-            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
-        sys.stdout.flush()
+def p(*args):
+    if args and isinstance(args[0], bool):
+        sys.stdout.write("YES\n" if args[0] else "NO\n")
+    else:
+        sys.stdout.write(" ".join(str(e) for e in args) + "\n")
 
-    def p2(*args):
-        if args and isinstance(args[0], bool):
-            sys.stdout.write("Yes\n" if args[0] else "No\n")
-        else:
-            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
-        sys.stdout.flush()
 
-    def fflush():
-        sys.stdout.flush()
+def p2(*args):
+    if args and isinstance(args[0], bool):
+        sys.stdout.write("Yes\n" if args[0] else "No\n")
+    else:
+        sys.stdout.write(" ".join(str(e) for e in args) + "\n")
 
-else:
 
-    def input():
-        global idx
-        idx += 1
-        return ins[idx].strip()
+def YES():
+    sys.stdout.write("YES\n")
 
-    def p(*args):
-        if args and isinstance(args[0], bool):
-            outs.append("YES" if args[0] else "NO")
-        else:
-            outs.append(" ".join(str(e) for e in args))
 
-    def p2(*args):
-        if args and isinstance(args[0], bool):
-            outs.append("Yes" if args[0] else "No")
-        else:
-            outs.append(" ".join(str(e) for e in args))
+def NO():
+    sys.stdout.write("NO\n")
 
-    def fflush():
-        sys.stdout.write("\n".join(outs) + "\n")
-        outs.clear()
+
+def Yes():
+    sys.stdout.write("Yes\n")
+
+
+def No():
+    sys.stdout.write("No\n")
 
 
 def is_prime(n):
@@ -578,41 +584,5 @@ class SegmentTree:
         return "SegmentTree({0})".format(self.data)
 
 
-def factor(n: int):
-    ret = []
-    i = 2
-    while i * i <= n:
-        while n % i == 0:
-            ret.append(i)
-            n //= i
-        i += 1
-    if n > 1:
-        ret.append(n)
-    return ret
-
-
 if __name__ == "__main__":
-    if interactive:
-        first_input = input()
-    else:
-        ins = sys.stdin.read().splitlines()
-        first_input = ins[0]
-    is_second = first_input == "second"
-    if (
-        not one_test
-        and interactive
-        or len(first_input.split()) == 1
-        and first_input.isnumeric()
-        and int(first_input) <= len(ins) - 1
-        and not one_test
-    ):
-        first_input = int(input())
-    else:
-        first_input = 1
-    if is_second:
-        for _ in range(first_input):
-            solve2()
-    else:
-        for _ in range(first_input):
-            solve()
-    fflush()
+    solve()

@@ -1,11 +1,10 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
-from math import inf, gcd, factorial, sqrt, ceil, floor, log, log2, log10
+from math import inf, gcd, lcm, factorial, sqrt, ceil, floor, log, log2, log10
 from heapq import *
 import sys, inspect, re
 from bisect import bisect_left, bisect_right
 from operator import *
-from string import *
 
 MOD = 998244353
 MOD7 = 1000000007
@@ -14,19 +13,30 @@ ins = []
 outs = []
 idx = -1
 one_test = False
-interactive = False
 
 
 def solve():
-    # for _ in range(int(input())):
-    n = int(input())
+    # n = int(input())
     # n, k = map(int, input().split())
     # for i in range(k):
     #     u, v = map(int, input().split())
     #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
+    n, m, k = map(int, input().split())
+
     # a = [e for e in input()]
-    a = list(map(int, input().split()))
+    # a = list(map(int, input().split()))
+    def isok(n, x, k):
+        left = k - 1
+        right = n - k
+        if right > left:
+            needed = right * 2 - 1
+            return needed + left <= x
+        else:
+            needed = left * 2 - 1
+            return needed + right <= x
+
+    l = 0
+
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
@@ -391,50 +401,45 @@ class LinkedList:
         return min_node
 
 
-if interactive:
+def input():
+    global idx
+    idx += 1
+    return ins[idx].strip()
 
-    def input():
-        return sys.stdin.readline().strip()
 
-    def p(*args):
-        if args and isinstance(args[0], bool):
-            sys.stdout.write("YES\n" if args[0] else "NO\n")
-        else:
-            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
-        sys.stdout.flush()
+def p(*args):
+    if args and isinstance(args[0], bool):
+        outs.append("YES" if args[0] else "NO")
+    else:
+        outs.append(" ".join(str(e) for e in args))
 
-    def p2(*args):
-        if args and isinstance(args[0], bool):
-            sys.stdout.write("Yes\n" if args[0] else "No\n")
-        else:
-            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
-        sys.stdout.flush()
 
-    def fflush():
-        sys.stdout.flush()
+def p2(*args):
+    if args and isinstance(args[0], bool):
+        outs.append("Yes" if args[0] else "No")
+    else:
+        outs.append(" ".join(str(e) for e in args))
 
-else:
 
-    def input():
-        global idx
-        idx += 1
-        return ins[idx].strip()
+def YES():
+    outs.append("YES")
 
-    def p(*args):
-        if args and isinstance(args[0], bool):
-            outs.append("YES" if args[0] else "NO")
-        else:
-            outs.append(" ".join(str(e) for e in args))
 
-    def p2(*args):
-        if args and isinstance(args[0], bool):
-            outs.append("Yes" if args[0] else "No")
-        else:
-            outs.append(" ".join(str(e) for e in args))
+def NO():
+    outs.append("NO")
 
-    def fflush():
-        sys.stdout.write("\n".join(outs) + "\n")
-        outs.clear()
+
+def Yes():
+    outs.append("Yes")
+
+
+def No():
+    outs.append("No")
+
+
+def fflush():
+    sys.stdout.write("\n".join(outs) + "\n")
+    outs.clear()
 
 
 def is_prime(n):
@@ -592,16 +597,17 @@ def factor(n: int):
 
 
 if __name__ == "__main__":
-    if interactive:
-        first_input = input()
-    else:
-        ins = sys.stdin.read().splitlines()
-        first_input = ins[0]
+    ins = sys.stdin.read().splitlines()
+    first_input = ins[0]
     is_second = first_input == "second"
+    if first_input == "first":
+        idx += 1
+        first_input = ins[1]
+    elif is_second:
+        idx += 1
+        first_input = ins[1]
     if (
-        not one_test
-        and interactive
-        or len(first_input.split()) == 1
+        len(first_input.split()) == 1
         and first_input.isnumeric()
         and int(first_input) <= len(ins) - 1
         and not one_test

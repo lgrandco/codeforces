@@ -1,49 +1,58 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
-from math import inf, gcd, factorial, sqrt, ceil, floor, log, log2, log10
+from math import inf, gcd, lcm, factorial, sqrt, ceil, floor, log, log2, log10
 from heapq import *
 import sys, inspect, re
 from bisect import bisect_left, bisect_right
-from operator import *
-from string import *
-
-MOD = 998244353
-MOD7 = 1000000007
-
-ins = []
-outs = []
-idx = -1
-one_test = False
-interactive = False
 
 
 def solve():
-    # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
-    # for i in range(k):
-    #     u, v = map(int, input().split())
-    #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
-    # a = [e for e in input()]
-    a = list(map(int, input().split()))
-    # b = list(map(int, input().split()))
-    # a = input()
-    # b = input()
+    first_input = input()
+    if len(first_input.split()) > 1:
+        x, y = map(int, first_input.split())
+        # x, y = map(int, input().split())
+        # n, x, y = map(int, first_input.split())
+        # n, x, y = map(int, input().split())
 
+    elif first_input != "second":
+        for _ in range(
+            int(input()) if first_input == "first" else int(first_input)
+        ):
+            # n = int(input())
+            # n, k = map(int, input().split())
+            n, x, y = map(int, input().split())
 
-def solve2():
-    n = int(input())
-    # n, k = map(int, input().split())
-    # for i in range(k):
-    #     u, v = map(int, input().split())
-    #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
-    # a = [e for e in input()]
-    a = list(map(int, input().split()))
-    # b = list(map(int, input().split()))
-    # a = input()
-    # b = input()
+            # a = [e for e in input()]
+            # a = input()
+            s = input()
+            a = list(map(int, input().split()))
+            if (
+                s.count("0") == 0
+                and y - x < n
+                or s.count("1") == 0
+                and x - y < n
+            ):
+                NO()
+            else:
+                min_a = 0
+                min_b = 0
+                for i in range(n):
+                    if s[i] == "0":
+                        min_a += a[i] // 2 + 1
+                    else:
+                        min_b += a[i] // 2 + 1
+                # debug(a, s, min_a, min_b)
+                p(x >= min_a and y >= min_b and x + y >= sum(a))
+
+    elif first_input == "second":
+        for _ in range(int(input())):
+            n = int(input())
+            # n, k = map(int, input().split())
+            # n, k, x = map(int, input().split())
+
+            # a = [e for e in input()]
+            # a = input()
+            a = list(map(int, input().split()))
 
 
 # some classes were based on https://github.com/cheran-senthil/PyRival/tree/master/pyrival/data_structures
@@ -391,50 +400,38 @@ class LinkedList:
         return min_node
 
 
-if interactive:
+def input():
+    return sys.stdin.readline().strip()
 
-    def input():
-        return sys.stdin.readline().strip()
 
-    def p(*args):
-        if args and isinstance(args[0], bool):
-            sys.stdout.write("YES\n" if args[0] else "NO\n")
-        else:
-            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
-        sys.stdout.flush()
+def p(*args):
+    if args and isinstance(args[0], bool):
+        sys.stdout.write("YES\n" if args[0] else "NO\n")
+    else:
+        sys.stdout.write(" ".join(str(e) for e in args) + "\n")
 
-    def p2(*args):
-        if args and isinstance(args[0], bool):
-            sys.stdout.write("Yes\n" if args[0] else "No\n")
-        else:
-            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
-        sys.stdout.flush()
 
-    def fflush():
-        sys.stdout.flush()
+def p2(*args):
+    if args and isinstance(args[0], bool):
+        sys.stdout.write("Yes\n" if args[0] else "No\n")
+    else:
+        sys.stdout.write(" ".join(str(e) for e in args) + "\n")
 
-else:
 
-    def input():
-        global idx
-        idx += 1
-        return ins[idx].strip()
+def YES():
+    sys.stdout.write("YES\n")
 
-    def p(*args):
-        if args and isinstance(args[0], bool):
-            outs.append("YES" if args[0] else "NO")
-        else:
-            outs.append(" ".join(str(e) for e in args))
 
-    def p2(*args):
-        if args and isinstance(args[0], bool):
-            outs.append("Yes" if args[0] else "No")
-        else:
-            outs.append(" ".join(str(e) for e in args))
+def NO():
+    sys.stdout.write("NO\n")
 
-    def fflush():
-        sys.stdout.write("\n".join(outs) + "\n")
-        outs.clear()
+
+def Yes():
+    sys.stdout.write("Yes\n")
+
+
+def No():
+    sys.stdout.write("No\n")
 
 
 def is_prime(n):
@@ -474,145 +471,40 @@ def debug(*args):
         del frame
 
 
+def debug2(*args):
+    frame = inspect.currentframe()
+    try:
+        prev_frame = frame.f_back
+
+        call_info = inspect.getframeinfo(prev_frame)
+        code_context = call_info.code_context[0].strip()
+
+        match = re.search(r"debug2\((.*)\)", code_context)
+
+        if match:
+            arg_names = [name.strip() for name in match.group(1).split(",")]
+
+            for name, value in zip(arg_names, args):
+                print(f"{name} = {value}")
+        else:
+            print("Could not parse variable names:", args)
+
+    finally:
+        del frame
+
+
 from random import getrandbits
 
 RANDOM = getrandbits(32)
 
 
-def __hash__(self):
-    return super().__hash__() ^ RANDOM
+class Wrapper(int):
+    def __init__(self, x):
+        int.__init__(x)
 
-
-class DisjointSetUnion:
-    def __init__(self, n):
-        self.parent = list(range(n))
-        self.size = [1] * n
-        self.num_sets = n
-
-    def find(self, a):
-        acopy = a
-        while a != self.parent[a]:
-            a = self.parent[a]
-        while acopy != a:
-            self.parent[acopy], acopy = a, self.parent[acopy]
-        return a
-
-    def union(self, a, b):
-        a, b = self.find(a), self.find(b)
-        if a != b:
-            if self.size[a] < self.size[b]:
-                a, b = b, a
-
-            self.num_sets -= 1
-            self.parent[b] = a
-            self.size[a] += self.size[b]
-
-    def set_size(self, a):
-        return self.size[self.find(a)]
-
-    def __len__(self):
-        return self.num_sets
-
-
-class SegmentTree:
-    def __init__(self, data, default=0, func=max):
-        """initialize the segment tree with data"""
-        self._default = default
-        self._func = func
-        self._len = len(data)
-        self._size = _size = 1 << (self._len - 1).bit_length()
-
-        self.data = [default] * (2 * _size)
-        self.data[_size : _size + self._len] = data
-        for i in reversed(range(_size)):
-            self.data[i] = func(self.data[i + i], self.data[i + i + 1])
-
-    def __delitem__(self, idx):
-        self[idx] = self._default
-
-    def __getitem__(self, idx):
-        return self.data[idx + self._size]
-
-    def __setitem__(self, idx, value):
-        idx += self._size
-        self.data[idx] = value
-        idx >>= 1
-        while idx:
-            self.data[idx] = self._func(
-                self.data[2 * idx], self.data[2 * idx + 1]
-            )
-            idx >>= 1
-
-    def __len__(self):
-        return self._len
-
-    def query(self, start, stop):
-        """func of data[start, stop)"""
-        start += self._size
-        stop += self._size
-
-        res_left = res_right = self._default
-        while start < stop:
-            if start & 1:
-                res_left = self._func(res_left, self.data[start])
-                start += 1
-            if stop & 1:
-                stop -= 1
-                res_right = self._func(self.data[stop], res_right)
-            start >>= 1
-            stop >>= 1
-
-        return self._func(res_left, res_right)
-
-    def find_kth(self, k):
-        idx = 1
-        while idx < self._size:
-            if self.data[2 * idx] >= k:
-                idx = 2 * idx
-            else:
-                k -= self.data[2 * idx]
-                idx = 2 * idx + 1
-        return idx - self._size
-
-    def __repr__(self):
-        return "SegmentTree({0})".format(self.data)
-
-
-def factor(n: int):
-    ret = []
-    i = 2
-    while i * i <= n:
-        while n % i == 0:
-            ret.append(i)
-            n //= i
-        i += 1
-    if n > 1:
-        ret.append(n)
-    return ret
+    def __hash__(self):
+        return super(Wrapper, self).__hash__() ^ RANDOM
 
 
 if __name__ == "__main__":
-    if interactive:
-        first_input = input()
-    else:
-        ins = sys.stdin.read().splitlines()
-        first_input = ins[0]
-    is_second = first_input == "second"
-    if (
-        not one_test
-        and interactive
-        or len(first_input.split()) == 1
-        and first_input.isnumeric()
-        and int(first_input) <= len(ins) - 1
-        and not one_test
-    ):
-        first_input = int(input())
-    else:
-        first_input = 1
-    if is_second:
-        for _ in range(first_input):
-            solve2()
-    else:
-        for _ in range(first_input):
-            solve()
-    fflush()
+    solve()
