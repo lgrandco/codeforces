@@ -1,250 +1,45 @@
-from itertools import combinations, product, permutations
-from collections import deque, Counter, defaultdict
-from math import inf, gcd, factorial, sqrt, ceil, floor, log, log2, log10
-from heapq import *
-import sys, inspect, re
-from bisect import bisect_left, bisect_right
-from operator import *
-from string import *
+from typing import *
+import sys
 from random import randint
-from random import *
-
-MOD = 998244353
-MOD7 = 1000000007
-
-ins = []
-outs = []
-idx = -1
-one_test = False
-interactive = False
-
-
-def solve():
-    # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
-    # for i in range(k):
-    #     u, v = map(int, input().split())
-    #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
-    # a = [e for e in input()]
-    a = list(map(int, input().split()))
-    # b = list(map(int, input().split()))
-    # a = input()
-    # b = input()
-
-
-def gen():
+if len(sys.argv) > 1 and sys.argv[1] == "gen":
     print(1)
     n = randint(1, 5)
     print(n)
+    a = [randint(1, 10) for _ in range(n)]
     # n, q = [randint(1, 100) for _ in range(2)]
     # print(n, q)
-    a = [randint(1, 10) for _ in range(n)]
-    print(*a)
+    # print(*a)
     # for _ in range(q):
     #     print(*[randint(1, 100) for _ in range(2)])
+    sys.exit(0)
 
 
-def brute():
-    n = input()
-    a = list(map(int, input().split()))
 
 
-def solve2():
-    n = int(input())
-    # n, k = map(int, input().split())
-    # for i in range(k):
-    #     u, v = map(int, input().split())
-    #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
-    # a = [e for e in input()]
-    a = list(map(int, input().split()))
-    # b = list(map(int, input().split()))
-    # a = input()
-    # b = input()
 
 
-def brute2():
-    n = input()
-    a = list(map(int, input().split()))
+        if len(sys.argv) > 1 and sys.argv[1] == "brute":
+            return
+
+
+        return
+
+from itertools import combinations, product, permutations
+from collections import deque, Counter, defaultdict
+from math import *
+from heapq import *
+import sys, inspect, re
+from bisect import bisect_left, bisect_right
+from sortedcontainers import *
 
 
 # some classes were based on https://github.com/cheran-senthil/PyRival/tree/master/pyrival/data_structures
-from bisect import bisect_left, bisect_right
-
-
-class FenwickTree:
-    def __init__(self, x):
-        bit = self.bit = list(x)
-        size = self.size = len(bit)
-        for i in range(size):
-            j = i | (i + 1)
-            if j < size:
-                bit[j] += bit[i]
-
-    def update(self, idx, x):
-        """updates bit[idx] += x"""
-        while idx < self.size:
-            self.bit[idx] += x
-            idx |= idx + 1
-
-    def __call__(self, end):
-        """calc sum(bit[:end])"""
-        x = 0
-        while end:
-            x += self.bit[end - 1]
-            end &= end - 1
-        return x
-
-    def find_kth(self, k):
-        """Find largest idx such that sum(bit[:idx]) <= k"""
-        idx = -1
-        for d in reversed(range(self.size.bit_length())):
-            right_idx = idx + (1 << d)
-            if right_idx < self.size and self.bit[right_idx] <= k:
-                idx = right_idx
-                k -= self.bit[idx]
-        return idx + 1, k
-
-
-class SortedList:
-    block_size = 700
-
-    def __init__(self, iterable=()):
-        iterable = sorted(iterable)
-        self.micros = [
-            iterable[i : i + self.block_size - 1]
-            for i in range(0, len(iterable), self.block_size - 1)
-        ] or [[]]
-        self.macro = [i[0] for i in self.micros[1:]]
-        self.micro_size = [len(i) for i in self.micros]
-        self.fenwick = FenwickTree(self.micro_size)
-        self.size = len(iterable)
-
-    def add(self, x):
-        i = bisect_left(self.macro, x)
-        j = bisect_right(self.micros[i], x)
-        self.micros[i].insert(j, x)
-        self.size += 1
-        self.micro_size[i] += 1
-        self.fenwick.update(i, 1)
-        if len(self.micros[i]) >= self.block_size:
-            self.micros[i : i + 1] = (
-                self.micros[i][: self.block_size >> 1],
-                self.micros[i][self.block_size >> 1 :],
-            )
-            self.micro_size[i : i + 1] = (
-                self.block_size >> 1,
-                self.block_size >> 1,
-            )
-            self.fenwick = FenwickTree(self.micro_size)
-            self.macro.insert(i, self.micros[i + 1][0])
-
-    def _delete(self, i, j):
-        self.micros[i].pop(j)
-        self.size -= 1
-        self.micro_size[i] -= 1
-        self.fenwick.update(i, -1)
-        if len(self.micros[i]) == 0 and len(self.micros) > 1:
-            del self.micros[i]
-            del self.micro_size[i]
-            self.macro = [m[0] for m in self.micros[1:]]
-            self.fenwick = FenwickTree(self.micro_size)
-
-    def remove(self, x):
-        # Find the block where x 'should' be
-        i = bisect_right(self.macro, x)
-
-        # Check block i (Standard case)
-        if i < len(self.micros):
-            j = bisect_left(self.micros[i], x)
-            if j < len(self.micros[i]) and self.micros[i][j] == x:
-                self._delete(i, j)
-                return
-
-        # Check block i-1 (Boundary/Duplicate case)
-        # This is the fix for "1 not in list" error
-        if i > 0:
-            j = bisect_left(self.micros[i - 1], x)
-            if j < len(self.micros[i - 1]) and self.micros[i - 1][j] == x:
-                self._delete(i - 1, j)
-                return
-
-        raise ValueError(f"{x} not in list")
-
-    def pop(self, k=-1):
-        i, j = self._find_kth(k)
-        val = self.micros[i][j]  # Capture value before delete
-        self._delete(i, j)
-        return val
-
-    def __getitem__(self, k):
-        i, j = self._find_kth(k)
-        return self.micros[i][j]
-
-    def count(self, x):
-        return self.bisect_right(x) - self.bisect_left(x)
-
-    def __contains__(self, x):
-        return self.count(x) > 0
-
-    def bisect_left(self, x):
-        i = bisect_left(self.macro, x)
-        return self.fenwick(i) + bisect_left(self.micros[i], x)
-
-    def bisect_right(self, x):
-        i = bisect_right(self.macro, x)
-        return self.fenwick(i) + bisect_right(self.micros[i], x)
-
-    def _find_kth(self, k):
-        return self.fenwick.find_kth(k + self.size if k < 0 else k)
-
-    def __len__(self):
-        return self.size
-
-    def __iter__(self):
-        return (x for micro in self.micros for x in micro)
-
-    def __repr__(self):
-        return str(list(self))
-
-    def __getitem__(self, k):
-        i, j = self._find_kth(k)
-        return self.micros[i][j]
-
-    def count(self, x):
-        return self.bisect_right(x) - self.bisect_left(x)
-
-    def __contains__(self, x):
-        return self.count(x) > 0
-
-    def bisect_left(self, x):
-        i = bisect_left(self.macro, x)
-        return self.fenwick(i) + bisect_left(self.micros[i], x)
-
-    def bisect_right(self, x):
-        i = bisect_right(self.macro, x)
-        return self.fenwick(i) + bisect_right(self.micros[i], x)
-
-    def _find_kth(self, k):
-        return self.fenwick.find_kth(k + self.size if k < 0 else k)
-
-    def __len__(self):
-        return self.size
-
-    def __iter__(self):
-        return (x for micro in self.micros for x in micro)
-
-    def __repr__(self):
-        return str(list(self))
-
-
 class Node:
     def __init__(self, value):
         self.value = value
         self.next = None
         self.prev = None
+
 
     def __eq__(self, other):
         return self.value == other.value
@@ -415,67 +210,6 @@ class LinkedList:
         return min_node
 
 
-if interactive:
-
-    def input():
-        return sys.stdin.readline().strip()
-
-    def p(*args):
-        if args and isinstance(args[0], bool):
-            sys.stdout.write("YES\n" if args[0] else "NO\n")
-        else:
-            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
-        sys.stdout.flush()
-
-    def p2(*args):
-        if args and isinstance(args[0], bool):
-            sys.stdout.write("Yes\n" if args[0] else "No\n")
-        else:
-            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
-        sys.stdout.flush()
-
-    def fflush():
-        sys.stdout.flush()
-
-else:
-
-    def input():
-        global idx
-        idx += 1
-        return ins[idx].strip()
-
-    def p(*args):
-        if args and isinstance(args[0], bool):
-            outs.append("YES" if args[0] else "NO")
-        else:
-            outs.append(" ".join(str(e) for e in args))
-
-    def p2(*args):
-        if args and isinstance(args[0], bool):
-            outs.append("Yes" if args[0] else "No")
-        else:
-            outs.append(" ".join(str(e) for e in args))
-
-    def fflush():
-        sys.stdout.write("\n".join(outs) + "\n")
-        outs.clear()
-
-
-def is_prime(n):
-    if n <= 1:
-        return False
-    if n <= 3:
-        return True
-    if n % 2 == 0 or n % 3 == 0:
-        return False
-    i = 5
-    while i * i <= n:
-        if n % i == 0 or n % (i + 2) == 0:
-            return False
-        i += 6
-    return True
-
-
 def debug(*args):
     frame = inspect.currentframe()
     try:
@@ -497,15 +231,19 @@ def debug(*args):
     finally:
         del frame
 
-
-from random import getrandbits
-
-RANDOM = getrandbits(32)
-
-
-def Wrapper(x):
-    def __hash__(self):
-        return super().__hash__() ^ RANDOM
+def is_prime(n):
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
 
 
 class DisjointSetUnion:
@@ -704,41 +442,5 @@ def factor(n):
     return ret
 
 
-if __name__ == "__main__":
-    argc = len(sys.argv)
-    if argc > 1 and sys.argv[1] == "gen":
-        gen()
-        sys.exit(0)
 
-    if interactive:
-        first_input = input()
-    else:
-        ins = sys.stdin.read().splitlines()
-        first_input = ins[0]
-    is_second = first_input == "second"
-    if (
-        not one_test
-        and interactive
-        or len(first_input.split()) == 1
-        and first_input.isnumeric()
-        and int(first_input) <= len(ins) - 1
-        and not one_test
-    ):
-        first_input = int(input())
-    else:
-        first_input = 1
-    if argc > 1 and sys.argv[1] == "brute":
-        if is_second:
-            for _ in range(first_input):
-                brute2()
-        else:
-            for _ in range(first_input):
-                brute()
-    else:
-        if is_second:
-            for _ in range(first_input):
-                solve2()
-        else:
-            for _ in range(first_input):
-                solve()
-    fflush()
+# My template

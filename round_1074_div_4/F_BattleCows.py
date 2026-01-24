@@ -21,14 +21,36 @@ interactive = False
 
 def solve():
     # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
-    # for i in range(k):
-    #     u, v = map(int, input().split())
-    #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
-    # a = [e for e in input()]
+    # n = int(input())
+    n, q = map(int, input().split())
     a = list(map(int, input().split()))
+    pres = [a]
+    for x in range(n):
+        cur = []
+        for i in range(1, len(pres[-1]), 2):
+            cur.append(pres[-1][i] ^ pres[-1][i - 1])
+        pres.append(cur)
+
+    for _ in range(q):
+        b, c = map(int, input().split())
+        above = 0
+        b -= 1
+        cur = c
+        i = 1
+        for x in range(n):
+            if b % 2:
+                if cur <= pres[x][b - 1]:
+                    above += i
+                cur = cur ^ pres[x][b - 1]
+            else:
+                if cur < pres[x][b + 1]:
+                    above += i
+                cur = cur ^ pres[x][b + 1]
+            b //= 2
+            i *= 2
+            # debug(b, above, pres)
+        p(above)
+
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
@@ -503,9 +525,8 @@ from random import getrandbits
 RANDOM = getrandbits(32)
 
 
-def Wrapper(x):
-    def __hash__(self):
-        return super().__hash__() ^ RANDOM
+def __hash__(self):
+    return super().__hash__() ^ RANDOM
 
 
 class DisjointSetUnion:

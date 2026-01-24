@@ -21,14 +21,26 @@ interactive = False
 
 def solve():
     # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
+    # n = int(input())
+    n, x = map(int, input().split())
+    pos = 0
     # for i in range(k):
     #     u, v = map(int, input().split())
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
-    a = list(map(int, input().split()))
+    # a = list(map(int, input().split()))
+    jumps = []
+    for i in range(n):
+        a, b, c = map(int, input().split())
+        x -= (b - 1) * a
+        if a * b - c > 0:
+            # p("here", a, b, c)
+            jumps.append(a * b - c)
+    if x <= 0:
+        p(0)
+    else:
+        p(min(-(-x // e) for e in jumps) if jumps else -1)
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()

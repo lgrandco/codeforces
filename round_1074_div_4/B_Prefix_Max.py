@@ -29,6 +29,11 @@ def solve():
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
     a = list(map(int, input().split()))
+    m = max(a)
+    cur = 0
+    for i in range(n):
+        cur += m
+    print(cur)
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
@@ -503,9 +508,8 @@ from random import getrandbits
 RANDOM = getrandbits(32)
 
 
-def Wrapper(x):
-    def __hash__(self):
-        return super().__hash__() ^ RANDOM
+def __hash__(self):
+    return super().__hash__() ^ RANDOM
 
 
 class DisjointSetUnion:

@@ -3,6 +3,7 @@ set -e
 # g++ code.cpp -o code
 # g++ gen.cpp -o gen
 # g++ brute.cpp -o brute
+python3 $1 gen > /dev/null
 for((i = 1; ; ++i)); do
     python3 $1 gen $i > input_file
     python3 $1 < input_file > myAnswer

@@ -28,10 +28,31 @@ def solve():
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
-    a = list(map(int, input().split()))
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
+    # for perm in permutations(range(1, n + 1)):
+    #     if all(
+    #         # perm[i] == (i + 1) ^ 1
+    #         any(perm[i] == (i + 1) ^ perm[j] for j in range(i + 1, n))
+    #         for i in range(1, n - 1)
+    #     ):
+    #         print(perm, "good")
+    # perm = list(map(int, "3 6 2 5 1 4".split()))
+
+    r = [0] * n
+    idx = n - 2
+    r[idx] = 1
+    r[-1] = (n - 1) ^ 1
+    added = {1, r[-1]}
+    for i in range(1, idx):
+        r[i] = 1 ^ (i + 1)
+        added.add(r[i])
+    for i in range(2, n + 1):
+        if i not in added:
+            r[0] = i
+            break
+    p(*r)
 
 
 def gen():

@@ -21,14 +21,27 @@ interactive = False
 
 def solve():
     # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
+    # n = int(input())
+    n, h, l = map(int, input().split())
     # for i in range(k):
     #     u, v = map(int, input().split())
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
+    r = 0
+    h, l = sorted([h, l])
     a = list(map(int, input().split()))
+    a = sorted(a)[::-1]
+    used = set()
+    for i in range(n):
+        if a[i] > l or i in used:
+            continue
+        for j in range(i + 1, n):
+            if a[j] <= h and j not in used:
+                used.add(j)
+                r += 1
+                break
+    p(r)
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()

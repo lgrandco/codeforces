@@ -21,14 +21,40 @@ interactive = False
 
 def solve():
     # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
+    # n = int(input())
+    n, m, h = map(int, input().split())
     # for i in range(k):
     #     u, v = map(int, input().split())
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
     a = list(map(int, input().split()))
+    a2 = [(a[i], -1) for i in range(n)]
+    lastreset = -2
+    for i in range(m):
+        (
+            b,
+            c,
+        ) = map(int, input().split())
+        val_last, idx_last = a2[b - 1]
+        if idx_last < lastreset:
+            a2[b - 1] = (a[b - 1] + c, i)
+        else:
+            a2[b - 1] = (val_last + c, i)
+        if a2[b - 1][0] > h:
+            lastreset = i
+            a2[b - 1] = (a[b - 1], i)
+    r = []
+    i = 0
+    # debug(a2)
+    for val, idx in a2:
+        if idx >= lastreset:
+            r.append(val)
+        else:
+            r.append(a[i])
+        i += 1
+
+    p(*r)
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
@@ -503,9 +529,8 @@ from random import getrandbits
 RANDOM = getrandbits(32)
 
 
-def Wrapper(x):
-    def __hash__(self):
-        return super().__hash__() ^ RANDOM
+def __hash__(self):
+    return super().__hash__() ^ RANDOM
 
 
 class DisjointSetUnion:

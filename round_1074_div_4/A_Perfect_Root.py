@@ -28,7 +28,8 @@ def solve():
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
-    a = list(map(int, input().split()))
+    # a = list(map(int, input().split()))
+    print(*(i for i in range(1, n + 1)))
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
@@ -503,9 +504,8 @@ from random import getrandbits
 RANDOM = getrandbits(32)
 
 
-def Wrapper(x):
-    def __hash__(self):
-        return super().__hash__() ^ RANDOM
+def __hash__(self):
+    return super().__hash__() ^ RANDOM
 
 
 class DisjointSetUnion:

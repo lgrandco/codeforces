@@ -28,10 +28,60 @@ def solve():
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
-    a = list(map(int, input().split()))
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
+    # f = 0
+    # for perm in permutations(range(1, n + 1)):
+    #     if all(
+    #         # perm[i] == (i + 1) ^ 1
+    #         any(perm[i] == (i + 1) ^ perm[j] for j in range(i + 1, n))
+    #         for i in range(n - 1)
+    #     ):
+    #         p(perm, "good")
+    #         f = 1
+    # if not f:
+    #     p(-1, n)
+    #     f = 0
+    # p("------------------------------")
+    # for perm in permutations(range(1, n + 1)):
+    #     if all(
+    #         # perm[i] == (i + 1) ^ 1
+    #         any(perm[i] == (i + 1) ^ perm[j] for j in range(i + 1, n))
+    #         for i in range(1, n - 1)
+    #     ):
+    #         p(perm, "good")
+    #         f = 1
+    # p("------------------------------")
+
+    r = [0] * n
+    idx = n - 2
+    r[idx] = 1
+    r[-1] = (n - 1) ^ 1
+    added = {1, r[-1]}
+    for i in range(1, idx):
+        r[i] = 1 ^ (i + 1)
+        added.add(r[i])
+    for i in range(2, n + 1):
+        if i not in added:
+            r[0] = i
+            break
+    ans = [-1]
+    for i in range(1, n):
+        if r[0] == 1 ^ r[i]:
+            ans = r
+            break
+    if ans[0] != -1:
+        p(*ans)
+    else:
+        if n < 3:
+            p(-1)
+        else:
+            r[0], r[2] = r[2], r[0]
+            if any(r[0] == 1 ^ r[j] for j in range(1, n)):
+                p(*r)
+            else:
+                p(-1)
 
 
 def gen():

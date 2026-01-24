@@ -21,14 +21,59 @@ interactive = False
 
 def solve():
     # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
+    # n = int(input())
+    n, m, k = map(int, input().split())
     # for i in range(k):
     #     u, v = map(int, input().split())
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
     a = list(map(int, input().split()))
+    b = list(map(int, input().split()))
+    b.sort()
+    # a2 = []
+    ins = input()
+    left = []
+    right = []
+    alive = set(range(n))
+    for i, e in enumerate(a):
+        x = bisect_left(b, e)
+        if x == 0:
+            _min = -inf
+        else:
+            _min = b[x - 1]
+        left.append((e - _min, i))
+        if x >= m:
+            _max = inf
+        else:
+            _max = b[x]
+        right.append((_max - e, i))
+    curleft = curright = 0
+    left.sort(reverse=True)
+    right.sort(reverse=True)
+    r = []
+    # debug(left, right)
+    for e in ins:
+        if e == "R":
+            curright += 1
+            curleft -= 1
+        else:
+            curright -= 1
+            curleft += 1
+        while right and curright >= right[-1][0]:
+            val, idx = right.pop()
+            if idx in alive:
+                alive.remove(idx)
+        while left and curleft >= left[-1][0]:
+            val, idx = left.pop()
+            if idx in alive:
+                alive.remove(idx)
+        # debug(curleft, curright, alive)
+        r.append(len(alive))
+    p(*r)
+    # for i in range(n):
+    #     if _min + a[i] > a2[i][0] and _max + a[i] < a2[i][1]
+
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
@@ -503,9 +548,8 @@ from random import getrandbits
 RANDOM = getrandbits(32)
 
 
-def Wrapper(x):
-    def __hash__(self):
-        return super().__hash__() ^ RANDOM
+def __hash__(self):
+    return super().__hash__() ^ RANDOM
 
 
 class DisjointSetUnion:
