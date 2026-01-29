@@ -6,7 +6,7 @@ import sys, inspect, re
 from bisect import bisect_left, bisect_right
 from operator import *
 from string import *
-from random import randint
+from random import randint, randrange
 from random import *
 
 MOD = 998244353
@@ -503,7 +503,10 @@ from random import getrandbits
 RANDOM = getrandbits(32)
 
 
-def Wrapper(x):
+class Wrapper(int):
+    def __init__(self, x):
+        int.__init__(x)
+
     def __hash__(self):
         return super().__hash__() ^ RANDOM
 
@@ -689,6 +692,59 @@ class LazySegmentTree:
 
     def __repr__(self):
         return "LazySegmentTree({0})".format(self.data)
+
+
+class Defaultdict(defaultdict):
+    def __init__(self, df):
+        super().__init__(df)
+        self.x = randrange(1 << 31)
+
+    def __setitem__(self, key, value):
+        super().__setitem__(key ^ self.x, value)
+
+    def __getitem__(self, item):
+        return super().__getitem__(item ^ self.x)
+
+    def __missing__(self, key):
+        return super().__missing__(key ^ self.x)
+
+    def __iter__(self):
+        for a in super().__iter__():
+            yield a ^ self.x
+
+    def __contains__(self, item):
+        return super().__contains__(item ^ self.x)
+
+    def __delitem__(self, key):
+        super().__delitem__(key ^ self.x)
+
+    def items(self):
+        return [(k ^ self.x, v) for k, v in super().items()]
+
+
+class Set(set):
+    def __init__(self):
+        super().__init__()
+        self.x = randrange(1 << 31)
+
+    def add(self, a):
+        super().add(a ^ self.x)
+
+    def pop(self):
+        return super().pop() ^ self.x
+
+    def remove(self, a):
+        super().remove(a ^ self.x)
+
+    def discard(self, a):
+        super().discard(a ^ self.x)
+
+    def __contains__(self, item):
+        return super().__contains__(item ^ self.x)
+
+    def __iter__(self):
+        for a in super().__iter__():
+            yield a ^ self.x
 
 
 def factor(n):
