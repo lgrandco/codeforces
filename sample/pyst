@@ -7,7 +7,9 @@ python3 $1 gen > /dev/null
 for((i = 1; ; ++i)); do
     python3 $1 gen $i > input_file
     python3 $1 < input_file > myAnswer
+    # python3 $1 check < myAnswer
     python3 $1 brute < input_file > correctAnswer
+    # python3 $1 check < correctAnswer
     diff -Z myAnswer correctAnswer > /dev/null || break
     echo "Passed test: "  $i
 done
