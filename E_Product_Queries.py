@@ -512,10 +512,7 @@ from random import getrandbits
 RANDOM = getrandbits(32)
 
 
-class Wrapper(int):
-    def __init__(self, x):
-        int.__init__(x)
-
+def Wrapper(x):
     def __hash__(self):
         return super().__hash__() ^ RANDOM
 
@@ -703,7 +700,7 @@ class LazySegmentTree:
         return "LazySegmentTree({0})".format(self.data)
 
 
-def prime_factors(n):
+def factor(n):
     ret = []
     i = 2
     while i * i <= n:
@@ -714,17 +711,6 @@ def prime_factors(n):
     if n > 1:
         ret.append(n)
     return ret
-
-
-def all_factors(n):
-    ret = []
-    i = 1
-    while i * i <= n:
-        ret.append(i)
-        if i != n // i:
-            ret.append(n // i)
-        i += 1
-    return sorted(ret)
 
 
 if __name__ == "__main__":

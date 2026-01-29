@@ -29,6 +29,16 @@ def solve():
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
     a = list(map(int, input().split()))
+    a
+    dp = [inf] * (n + 1)
+    dp[1] = 1
+    for i in range(1, n + 1):
+        divs = all_factors(i)
+        for div in divs:
+            dp[i] = min(dp[i], dp[div] + dp[i // div])
+
+    p(dp[1:])
+
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
@@ -703,7 +713,7 @@ class LazySegmentTree:
         return "LazySegmentTree({0})".format(self.data)
 
 
-def prime_factors(n):
+def factor(n):
     ret = []
     i = 2
     while i * i <= n:
