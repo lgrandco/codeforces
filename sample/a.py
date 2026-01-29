@@ -51,6 +51,15 @@ def brute():
     a = list(map(int, input().split()))
 
 
+def check():
+    # n = input()
+    # a = list(map(int, input().split()))
+    # if not (a != "..."):
+    #     print(a, file=sys.stderr)
+    #     sys.exit(1)
+    sys.exit(0)
+
+
 def solve2():
     n = int(input())
     # n, k = map(int, input().split())
@@ -708,6 +717,9 @@ if __name__ == "__main__":
     argc = len(sys.argv)
     if argc > 1 and sys.argv[1] == "gen":
         gen()
+        sys.exit(0)
+    elif argc > 1 and sys.argv[1] == "check":
+        check()
         sys.exit(0)
 
     if interactive:
