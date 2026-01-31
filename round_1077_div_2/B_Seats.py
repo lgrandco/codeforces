@@ -6,7 +6,7 @@ import sys, inspect, re
 from bisect import bisect_left, bisect_right
 from operator import *
 from string import *
-from random import randint
+from random import randint, randrange
 from random import *
 
 MOD = 998244353
@@ -21,27 +21,30 @@ interactive = False
 
 def solve():
     # for _ in range(int(input())):
+    n = int(input())
     # n, k = map(int, input().split())
     # for i in range(k):
     #     u, v = map(int, input().split())
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
-    n = int(input())
-    a = set(Wrapper(e) for e in map(int, input().split()))
-    dp = [inf] * (n + 1)
-    for i in range(n + 1):
-        divs = all_factors(i)
-        if Wrapper(i) in a:
-            dp[i] = 1
-        else:
-            for div in divs:
-                dp[i] = min(dp[i], dp[div] + dp[i // div])
-            debug(i, dp, divs)
-    p(*[-1 if e == inf else e for e in dp[1:]])
-
+    # a = list(map(int, input().split()))
     # b = list(map(int, input().split()))
-    # a = input()
+    a = input()
+    cur = 0
+    a = "0" + a
+    a += "01"
+    r = 0
+    c = 0
+    for e in a:
+        if e == "1":
+            if cur:
+                r += cur // 3
+            cur = 0
+            c += 1
+        else:
+            cur += 1
+    p(r + c - 1)
     # b = input()
 
 
@@ -714,7 +717,7 @@ class LazySegmentTree:
         return "LazySegmentTree({0})".format(self.data)
 
 
-def factor(n):
+def prime_factors(n):
     ret = []
     i = 2
     while i * i <= n:
@@ -731,10 +734,9 @@ def all_factors(n):
     ret = []
     i = 1
     while i * i <= n:
-        if n % i < 1:
-            ret.append(i)
-            if i != n // i:
-                ret.append(n // i)
+        ret.append(i)
+        if i != n // i:
+            ret.append(n // i)
         i += 1
     return sorted(ret)
 

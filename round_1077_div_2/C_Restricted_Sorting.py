@@ -6,7 +6,7 @@ import sys, inspect, re
 from bisect import bisect_left, bisect_right
 from operator import *
 from string import *
-from random import randint
+from random import randint, randrange
 from random import *
 
 MOD = 998244353
@@ -21,25 +21,55 @@ interactive = False
 
 def solve():
     # for _ in range(int(input())):
+    n = int(input())
+    a = list(map(int, input().split()))
+    b = sorted(a)
+    if a == b:
+        p(-1)
+        return
+    r = inf
+    # sl = SortedList()
+    # r = n
+    # for e in a:
+    #     if len(sl) > 0 and e <= sl[-1]:
+    #         idx = sl.bisect_left(e)
+    #         if idx > 0:
+    #             r = min(r, e - sl[idx - 1])
+    #         if idx < len(sl) - 1:
+    #             r = min(r, sl[idx] - e)
+    #             debug("hui")
+    #     sl.add(e)
+    #     debug(sl, r)
+    # p(r)
+    # 2 1 5 4 3
+    # 5 1 2 4 3
+    # 1 2 5 4 3
+    # 1 2 3 4 5
+
+    # 2 1 5 3 4
+    # 2 4 5 3 1
+    # 5 4 2 3 1
+    # 5 4 2 1 3
+    # 1 4 2 5 3
+    # 1 2 4 5 3
+    # 3 2 4 5 1
+    # 3 2 4 1 5
+    # 3 2 1 4 5
+    # 1 2 3 4 5
+    _min = min(a)
+    _max = max(a)
+    for i, e in enumerate(a):
+        if e != b[i]:
+            r = min(r, max(e - _min, _max - e))
+        # debug(_min, _max, e - _min, _max - e)
+        # debug(r)
+    p(r)
     # n, k = map(int, input().split())
     # for i in range(k):
     #     u, v = map(int, input().split())
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
-    n = int(input())
-    a = set(Wrapper(e) for e in map(int, input().split()))
-    dp = [inf] * (n + 1)
-    for i in range(n + 1):
-        divs = all_factors(i)
-        if Wrapper(i) in a:
-            dp[i] = 1
-        else:
-            for div in divs:
-                dp[i] = min(dp[i], dp[div] + dp[i // div])
-            debug(i, dp, divs)
-    p(*[-1 if e == inf else e for e in dp[1:]])
-
     # b = list(map(int, input().split()))
     # a = input()
     # b = input()
@@ -714,7 +744,7 @@ class LazySegmentTree:
         return "LazySegmentTree({0})".format(self.data)
 
 
-def factor(n):
+def prime_factors(n):
     ret = []
     i = 2
     while i * i <= n:
@@ -731,10 +761,9 @@ def all_factors(n):
     ret = []
     i = 1
     while i * i <= n:
-        if n % i < 1:
-            ret.append(i)
-            if i != n // i:
-                ret.append(n // i)
+        ret.append(i)
+        if i != n // i:
+            ret.append(n // i)
         i += 1
     return sorted(ret)
 
