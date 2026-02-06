@@ -37,7 +37,6 @@ def solve():
         else:
             for div in divs:
                 dp[i] = min(dp[i], dp[div] + dp[i // div])
-            debug(i, dp, divs)
     p(*[-1 if e == inf else e for e in dp[1:]])
 
     # b = list(map(int, input().split()))

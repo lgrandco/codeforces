@@ -1,6 +1,6 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
-from math import inf, gcd, factorial, sqrt, ceil, floor, log, log2, log10
+from math import inf, gcd, factorial, sqrt, ceil, floor, log, log2, log10, comb
 from heapq import *
 import sys, inspect, re
 from bisect import bisect_left, bisect_right
@@ -21,23 +21,82 @@ interactive = False
 
 def solve():
     # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
-    # for i in range(k):
-    #     u, v = map(int, input().split())
-    #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
-    # a = [e for e in input()]
-    a = list(map(int, input().split()))
-    # b = list(map(int, input().split()))
-    # a = input()
-    # b = input()
+    # n = int(input())
+    r = 0
+    n, k = map(int, input().split())
+    # n = 1000
+    # dp = [0] * (n + 1)
+    # for i in range(1, n + 1):
+    # if i % 2:
+    # dp[i] = dp[i - 1] + 1
+    # else:
+    # dp[i] = dp[i // 2] + 1
+    # p(dp)
+    # d = {}
+    # for i in range(1, n + 1):
+    #     # if log2(i) % 1 == 0:
+    #     # p(i // 2, d)
+    #     # d.clear()
+    #     # d[dp[i]] = d.get(dp[i], 0) + 1
+    #     p(i, dp[i])
+
+    # p(sum(dp[i] > k for i in range(1, n + 1)))
+
+    nbl = n.bit_length()
+    kbl = ((k + 1) + 1) // 2
+    if kbl > nbl:
+        p(0, nbl, kbl)
+    else:
+        if nbl == kbl:
+            if k % 2 < 1:
+                if n == (1 << nbl) - 1:
+                    p(1)
+                else:
+                    p(0)
+            else:
+                r = 0
+                for i in range(nbl - 1):
+                    if (n >> i) & 1 and i != 0:
+                        r += 2 ** (i)
+                p(r, r + 1, "test1")
+        else:
+            p(nbl, kbl, "z")
+            r = 0
+            if k % 2 < 1:
+                r += 1
+            else:
+                r += kbl
+            kbl += 1
+            i = 2
+            while kbl < nbl:
+                r += comb(kbl, i)
+                i += 1
+                kbl += 1
+            p(r, "r before", n, bin(n), nbl, kbl)
+            for i in range(nbl - 1):
+                if (n >> i) & 1 and i != 0:
+                    r += 2 ** (i)
+            p(r, r + 1, "test2")
+
+
+# 0 dict_items([])
+# for i in range(k):
+#     u, v = map(int, input().split())
+#     a, b, c = map(int, input().split())
+# n, m, k = map(int, input().split())
+# a = [e for e in input()]
+# a = list(map(int, input().split()))
+# b = list(map(int, input().split()))
+# a = input()
+# b = input()
 
 
 def gen():
     print(1)
     n = randint(1, 5)
-    print(n)
+    print(
+        n,
+    )
     # n, q = [randint(1, 100) for _ in range(2)]
     # print(n, q)
     a = [randint(1, 10) for _ in range(n)]

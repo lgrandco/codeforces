@@ -1,69 +1,133 @@
 from itertools import combinations, product, permutations
 from collections import deque, Counter, defaultdict
-import sys, math
-import heapq
+from math import inf, gcd, factorial, sqrt, ceil, floor, log, log2, log10
+from heapq import *
+import sys, inspect, re
 from bisect import bisect_left, bisect_right
+from operator import *
+from string import *
+from random import randint, randrange
+from random import *
+
+MOD = 998244353
+MOD7 = 1000000007
+
+ins = []
+outs = []
+idx = -1
+one_test = False
+interactive = False
 
 
 def solve():
-    first_input = input()
-    if len(first_input.split()) > 1:
-        x, y = map(int, first_input.split())
-        # x, y = map(int, input().split())
-        # n, x, y = map(int, first_input.split())
-        # n, x, y = map(int, input().split())
+    # for _ in range(int(input())):
+    # n = int(input())
+    n, k = map(int, input().split())
+    # n, k, x = map(int, input().split())
 
-    elif first_input != "second":
-        for _ in range(
-            int(input()) if first_input == "first" else int(first_input)
-        ):
-            # n = int(input())
-            n, k = map(int, input().split())
-            # n, k, x = map(int, input().split())
+    # a = [e for e in input()]
+    # a = input()
+    a = list(map(int, input().split()))
+    b = list(map(int, input().split()))
+    m = -inf
+    curr = 0
+    if k % 2:
+        pre = [0]
+        pre2 = [0]
+        for i, e in enumerate(a):
+            pre.append(max(e, pre[i] + e))
+            pre2.append(max(abs(b[i]) + e, pre[i] + abs(b[i]) + e))
+            m = max(m, pre2[-1])
+        curr = 0
+        # debug(pre, pre2)
+        m = pre2[-1]
+        for i in range(n - 1, -1, -1):
+            curr = max(a[i], a[i] + curr)
+            m = max(m, curr + pre2[i])
+        p(m)
+    else:
+        for i, e in enumerate(a):
+            curr = max(e, curr + e)
+            m = max(curr, m)
+        p(m)
 
-            # a = [e for e in input()]
-            # a = input()
-            a = list(map(int, input().split()))
-            b = list(map(int, input().split()))
-            m = -9999999
+
+def gen():
+    print(1)
+    n = randint(1, 5)
+    k = randint(1, 10000000)
+    print(n, k)
+    # n, q = [randint(1, 100) for _ in range(2)]
+    # print(n, q)
+    a = [randint(-100, 100) for _ in range(n)]
+    print(*a)
+    a = [randint(-100, 100) for _ in range(n)]
+    print(*a)
+    # for _ in range(q):
+    #     print(*[randint(1, 100) for _ in range(2)])
+
+
+def brute():
+    n, k = map(int, input().split())
+    # n, k, x = map(int, input().split())
+
+    # a = [e for e in input()]
+    # a = input()
+    a = list(map(int, input().split()))
+    b = list(map(int, input().split()))
+    m = -9999999
+    curr = 0
+    if k % 2:
+        for i in range(len(a)):
+            a[i], b[i] = abs(b[i]) + a[i], a[i]
             curr = 0
-            if k % 2:
-                f = 1
-            else:
-                f = 0
-            last = 0
-            diff = 0
-            currdiff = 0
-            if k % 2:
-                for i, e in enumerate(a):
-                    if e - currdiff + curr + max(
-                        currdiff, b[i]
-                    ) > e - currdiff + max(currdiff, b[i]):
-                        curr = e + curr - currdiff + max(currdiff, b[i])
-                        currdiff = max(currdiff, b[i])
-                    else:
-                        curr = e - currdiff + max(currdiff, b[i])
-                        currdiff = max(currdiff, b[i])
-                    m = max(curr, m)
-                p(m)
-            else:
-                for i, e in enumerate(a):
-                    curr = max(e, curr + e)
-                    m = max(curr, m)
-                p(m)
 
-    elif first_input == "second":
-        for _ in range(int(input())):
-            n = int(input())
-            # n, k = map(int, input().split())
-            # n, k, x = map(int, input().split())
+            for j in range(n):
+                curr = max(a[j], a[j] + curr)
+                m = max(m, curr)
+            a[i], b[i] = b[i], a[i]
 
-            # a = [e for e in input()]
-            # a = input()
-            a = list(map(int, input().split()))
+        p(m)
+
+    else:
+        for i, e in enumerate(a):
+            curr = max(e, curr + e)
+            m = max(curr, m)
+        p(m)
+
+
+def check():
+    # n = input()
+    # a = list(map(int, input().split()))
+    # if not (a != "..."):
+    #     print(a, file=sys.stderr)
+    #     sys.exit(1)
+    sys.exit(0)
+
+
+def solve2():
+    n = int(input())
+    # n, k = map(int, input().split())
+    # for i in range(k):
+    #     u, v = map(int, input().split())
+    #     a, b, c = map(int, input().split())
+    # n, m, k = map(int, input().split())
+    # a = [e for e in input()]
+    a = list(map(int, input().split()))
+    # b = list(map(int, input().split()))
+    # a = input()
+    # b = input()
+
+
+def brute2():
+    n = input()
+    a = list(map(int, input().split()))
 
 
 # some classes were based on https://github.com/cheran-senthil/PyRival/tree/master/pyrival/data_structures
+from bisect import bisect_left, bisect_right
+
+
 class FenwickTree:
     def __init__(self, x):
         bit = self.bit = list(x)
@@ -96,9 +160,6 @@ class FenwickTree:
                 idx = right_idx
                 k -= self.bit[idx]
         return idx + 1, k
-
-
-get = input
 
 
 class SortedList:
@@ -134,12 +195,73 @@ class SortedList:
             self.fenwick = FenwickTree(self.micro_size)
             self.macro.insert(i, self.micros[i + 1][0])
 
-    def pop(self, k=-1):
-        i, j = self._find_kth(k)
+    def _delete(self, i, j):
+        self.micros[i].pop(j)
         self.size -= 1
         self.micro_size[i] -= 1
         self.fenwick.update(i, -1)
-        return self.micros[i].pop(j)
+        if len(self.micros[i]) == 0 and len(self.micros) > 1:
+            del self.micros[i]
+            del self.micro_size[i]
+            self.macro = [m[0] for m in self.micros[1:]]
+            self.fenwick = FenwickTree(self.micro_size)
+
+    def remove(self, x):
+        # Find the block where x 'should' be
+        i = bisect_right(self.macro, x)
+
+        # Check block i (Standard case)
+        if i < len(self.micros):
+            j = bisect_left(self.micros[i], x)
+            if j < len(self.micros[i]) and self.micros[i][j] == x:
+                self._delete(i, j)
+                return
+
+        # Check block i-1 (Boundary/Duplicate case)
+        # This is the fix for "1 not in list" error
+        if i > 0:
+            j = bisect_left(self.micros[i - 1], x)
+            if j < len(self.micros[i - 1]) and self.micros[i - 1][j] == x:
+                self._delete(i - 1, j)
+                return
+
+        raise ValueError(f"{x} not in list")
+
+    def pop(self, k=-1):
+        i, j = self._find_kth(k)
+        val = self.micros[i][j]  # Capture value before delete
+        self._delete(i, j)
+        return val
+
+    def __getitem__(self, k):
+        i, j = self._find_kth(k)
+        return self.micros[i][j]
+
+    def count(self, x):
+        return self.bisect_right(x) - self.bisect_left(x)
+
+    def __contains__(self, x):
+        return self.count(x) > 0
+
+    def bisect_left(self, x):
+        i = bisect_left(self.macro, x)
+        return self.fenwick(i) + bisect_left(self.micros[i], x)
+
+    def bisect_right(self, x):
+        i = bisect_right(self.macro, x)
+        return self.fenwick(i) + bisect_right(self.micros[i], x)
+
+    def _find_kth(self, k):
+        return self.fenwick.find_kth(k + self.size if k < 0 else k)
+
+    def __len__(self):
+        return self.size
+
+    def __iter__(self):
+        return (x for micro in self.micros for x in micro)
+
+    def __repr__(self):
+        return str(list(self))
 
     def __getitem__(self, k):
         i, j = self._find_kth(k)
@@ -347,27 +469,347 @@ class LinkedList:
         return min_node
 
 
-def input():
-    return sys.stdin.readline().strip()
+if interactive:
+
+    def input():
+        return sys.stdin.readline().strip()
+
+    def p(*args):
+        if args and isinstance(args[0], bool):
+            sys.stdout.write("YES\n" if args[0] else "NO\n")
+        else:
+            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
+        sys.stdout.flush()
+
+    def p2(*args):
+        if args and isinstance(args[0], bool):
+            sys.stdout.write("Yes\n" if args[0] else "No\n")
+        else:
+            sys.stdout.write(" ".join(str(e) for e in args) + "\n")
+        sys.stdout.flush()
+
+    def fflush():
+        sys.stdout.flush()
+
+else:
+
+    def input():
+        global idx
+        idx += 1
+        return ins[idx].strip()
+
+    def p(*args):
+        if args and isinstance(args[0], bool):
+            outs.append("YES" if args[0] else "NO")
+        else:
+            outs.append(" ".join(str(e) for e in args))
+
+    def p2(*args):
+        if args and isinstance(args[0], bool):
+            outs.append("Yes" if args[0] else "No")
+        else:
+            outs.append(" ".join(str(e) for e in args))
+
+    def fflush():
+        sys.stdout.write("\n".join(outs) + "\n")
+        outs.clear()
 
 
-def p(x):
-    if isinstance(x, bool):
-        sys.stdout.write("YES\n" if x else "NO\n")
-    elif isinstance(x, list) or isinstance(x, tuple):
-        sys.stdout.write(" ".join(map(str, x)) + "\n")
-    else:
-        sys.stdout.write(str(x) + "\n")
+def is_prime(n):
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
 
 
-def p2(x):
-    if isinstance(x, bool):
-        sys.stdout.write("Yes\n" if x else "No\n")
-    elif isinstance(x, list) or isinstance(x, tuple):
-        sys.stdout.write(" ".join(map(str, x)) + "\n")
-    else:
-        sys.stdout.write(str(x) + "\n")
+def debug(*args):
+    frame = inspect.currentframe()
+    try:
+        prev_frame = frame.f_back
+
+        call_info = inspect.getframeinfo(prev_frame)
+        code_context = call_info.code_context[0].strip()
+
+        match = re.search(r"debug\((.*)\)", code_context)
+
+        if match:
+            arg_names = [name.strip() for name in match.group(1).split(",")]
+
+            for name, value in zip(arg_names, args):
+                print(f"{name} = {value}", file=sys.stderr)
+        else:
+            print("Could not parse variable names:", args, file=sys.stderr)
+
+    finally:
+        del frame
+
+
+from random import getrandbits
+
+RANDOM = getrandbits(32)
+
+
+class Wrapper(int):
+    def __init__(self, x):
+        int.__init__(x)
+
+    def __hash__(self):
+        return super().__hash__() ^ RANDOM
+
+
+class DisjointSetUnion:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.size = [1] * n
+        self.num_sets = n
+
+    def find(self, a):
+        acopy = a
+        while a != self.parent[a]:
+            a = self.parent[a]
+        while acopy != a:
+            self.parent[acopy], acopy = a, self.parent[acopy]
+        return a
+
+    def union(self, a, b):
+        a, b = self.find(a), self.find(b)
+        if a != b:
+            if self.size[a] < self.size[b]:
+                a, b = b, a
+
+            self.num_sets -= 1
+            self.parent[b] = a
+            self.size[a] += self.size[b]
+
+    def set_size(self, a):
+        return self.size[self.find(a)]
+
+    def __len__(self):
+        return self.num_sets
+
+
+class SegmentTree:
+    def __init__(self, data, default=0, func=max):
+        """initialize the segment tree with data"""
+        self._default = default
+        self._func = func
+        self._len = len(data)
+        self._size = _size = 1 << (self._len - 1).bit_length()
+
+        self.data = [default] * (2 * _size)
+        self.data[_size : _size + self._len] = data
+        for i in reversed(range(_size)):
+            self.data[i] = func(self.data[i + i], self.data[i + i + 1])
+
+    def __delitem__(self, idx):
+        self[idx] = self._default
+
+    def __getitem__(self, idx):
+        return self.data[idx + self._size]
+
+    def __setitem__(self, idx, value):
+        idx += self._size
+        self.data[idx] = value
+        idx >>= 1
+        while idx:
+            self.data[idx] = self._func(
+                self.data[2 * idx], self.data[2 * idx + 1]
+            )
+            idx >>= 1
+
+    def __len__(self):
+        return self._len
+
+    def query(self, start, stop):
+        """func of data[start, stop)"""
+        start += self._size
+        stop += self._size
+
+        res_left = res_right = self._default
+        while start < stop:
+            if start & 1:
+                res_left = self._func(res_left, self.data[start])
+                start += 1
+            if stop & 1:
+                stop -= 1
+                res_right = self._func(self.data[stop], res_right)
+            start >>= 1
+            stop >>= 1
+
+        return self._func(res_left, res_right)
+
+    def find_kth(self, k):
+        idx = 1
+        while idx < self._size:
+            if self.data[2 * idx] >= k:
+                idx = 2 * idx
+            else:
+                k -= self.data[2 * idx]
+                idx = 2 * idx + 1
+        return idx - self._size
+
+    def __repr__(self):
+        return "SegmentTree({0})".format(self.data)
+
+
+class LazySegmentTree:
+    def __init__(self, data, default=0, func=max):
+        """initialize the lazy segment tree with data"""
+        self._default = default
+        self._func = func
+
+        self._len = len(data)
+        self._size = _size = 1 << (self._len - 1).bit_length()
+        self._lazy = [0] * (2 * _size)
+
+        self.data = [default] * (2 * _size)
+        self.data[_size : _size + self._len] = data
+        for i in reversed(range(_size)):
+            self.data[i] = func(self.data[i + i], self.data[i + i + 1])
+
+    def __len__(self):
+        return self._len
+
+    def _push(self, idx):
+        """push query on idx to its children"""
+        # Let the children know of the queries
+        q, self._lazy[idx] = self._lazy[idx], 0
+
+        self._lazy[2 * idx] += q
+        self._lazy[2 * idx + 1] += q
+        self.data[2 * idx] += q
+        self.data[2 * idx + 1] += q
+
+    def _update(self, idx):
+        """updates the node idx to know of all queries applied to it via its ancestors"""
+        for i in reversed(range(1, idx.bit_length())):
+            self._push(idx >> i)
+
+    def _build(self, idx):
+        """make the changes to idx be known to its ancestors"""
+        idx >>= 1
+        while idx:
+            self.data[idx] = (
+                self._func(self.data[2 * idx], self.data[2 * idx + 1])
+                + self._lazy[idx]
+            )
+            idx >>= 1
+
+    def add(self, start, stop, value):
+        """lazily add value to [start, stop)"""
+        start = start_copy = start + self._size
+        stop = stop_copy = stop + self._size
+        while start < stop:
+            if start & 1:
+                self._lazy[start] += value
+                self.data[start] += value
+                start += 1
+            if stop & 1:
+                stop -= 1
+                self._lazy[stop] += value
+                self.data[stop] += value
+            start >>= 1
+            stop >>= 1
+
+        # Tell all nodes above of the updated area of the updates
+        self._build(start_copy)
+        self._build(stop_copy - 1)
+
+    def query(self, start, stop, default=0):
+        """func of data[start, stop)"""
+        start += self._size
+        stop += self._size
+
+        # Apply all the lazily stored queries
+        self._update(start)
+        self._update(stop - 1)
+
+        res = default
+        while start < stop:
+            if start & 1:
+                res = self._func(res, self.data[start])
+                start += 1
+            if stop & 1:
+                stop -= 1
+                res = self._func(res, self.data[stop])
+            start >>= 1
+            stop >>= 1
+        return res
+
+    def __repr__(self):
+        return "LazySegmentTree({0})".format(self.data)
+
+
+def prime_factors(n):
+    ret = []
+    i = 2
+    while i * i <= n:
+        while n % i == 0:
+            ret.append(i)
+            n //= i
+        i += 1
+    if n > 1:
+        ret.append(n)
+    return ret
+
+
+def all_factors(n):
+    ret = []
+    i = 1
+    while i * i <= n:
+        ret.append(i)
+        if i != n // i:
+            ret.append(n // i)
+        i += 1
+    return sorted(ret)
 
 
 if __name__ == "__main__":
-    solve()
+    argc = len(sys.argv)
+    if argc > 1 and sys.argv[1] == "gen":
+        gen()
+        sys.exit(0)
+    elif argc > 1 and sys.argv[1] == "check":
+        check()
+        sys.exit(0)
+
+    if interactive:
+        first_input = input()
+    else:
+        ins = sys.stdin.read().splitlines()
+        first_input = ins[0]
+    is_second = first_input == "second"
+    if (
+        not one_test
+        and interactive
+        or len(first_input.split()) == 1
+        and first_input.isnumeric()
+        and int(first_input) <= len(ins) - 1
+        and not one_test
+    ):
+        first_input = int(input())
+    else:
+        first_input = 1
+    if argc > 1 and sys.argv[1] == "brute":
+        if is_second:
+            for _ in range(first_input):
+                brute2()
+        else:
+            for _ in range(first_input):
+                brute()
+    else:
+        if is_second:
+            for _ in range(first_input):
+                solve2()
+        else:
+            for _ in range(first_input):
+                solve()
+    fflush()
