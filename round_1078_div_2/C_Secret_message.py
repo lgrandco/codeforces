@@ -22,65 +22,55 @@ interactive = False
 def solve():
     # for _ in range(int(input())):
     # n = int(input())
-    n, m, k = map(int, input().split())
-
-    def f(n, m, k, i):
-        right = max(n - k, 0)
-        left = min(k - 1, n - 1)
-
-        # debug(i)
-        i -= 1
-        leftused = 0
-        rightused = 0
-        while i:
-            if leftused <= rightused:
-                if leftused < left:
-                    leftused += 1
-                else:
-                    rightused += 1
-            else:
-                if rightused < right:
-                    rightused += 1
-                else:
-                    leftused += 1
-            i -= 1
-
-        if leftused >= rightused:
-            return 2 * leftused - bool(leftused) + rightused <= m
-        else:
-            return 2 * rightused - bool(rightused) + leftused <= m
-
-    lo = 1
-    hi = n
-    while lo < hi:
-        mid = (lo + hi) // 2
-        if f(n, m, k, mid):
-            lo = mid + 1
-        else:
-            hi = mid - 1
-    if f(n, m, k, lo):
-        p(lo)
-    else:
-        p(lo - 1)
-
+    n, k = map(int, input().split())
     # for i in range(k):
     #     u, v = map(int, input().split())
     #     a, b, c = map(int, input().split())
     # n, m, k = map(int, input().split())
     # a = [e for e in input()]
     # a = list(map(int, input().split()))
-
     # b = list(map(int, input().split()))
-    # a = input()
-    # b = input()
+    d = [set() for _ in range(n)]
+    a = ""
+    for _ in range(k):
+        a = input()
+        for i in range(n):
+            d[i].add(a[i])
+    # p(d)
+    r = []
+    for i in range(1, n + 1):
+        if n % i:
+            continue
+        # debug(i)
+        r.clear()
+        f = 1
+        for start in range(i):
+            cur = d[start].copy()
+            # debug(start, cur)
+            for j in range(start + i, n, i):
+                # debug(j)
+                cur &= d[j]
+                if not cur:
+                    f = 0
+                    break
+            if f == 0:
+                break
+            r.append(cur.pop())
+        if f:
+            p("".join(r * (n // i)))
+            break
+
+    # abcdabcd
+    # abababab
+    # 123456789ABC
+    # ABCABEABCABE
+    # ABCDABCDABCD
 
 
 def gen():
     print(1)
-    n = randint(1, 10**5)
-    m = randint(1, 10**9)
-    k = randint(1, n)
-    print(n, m, k)
+    n = randint(1, 5)
+    print(n)
     # n, q = [randint(1, 100) for _ in range(2)]
     # print(n, q)
     a = [randint(1, 10) for _ in range(n)]
@@ -90,56 +80,8 @@ def gen():
 
 
 def brute():
-    n, m, k = map(int, input().split())
-
-    def f(n, m, k, i):
-        right = max(n - k, 0)
-        left = min(k - 1, n - 1)
-        # debug(left, right)
-        # debug(i)
-        i -= 1
-        cost = 0
-        if i and left:
-            i -= 1
-            left -= 1
-            cost += 1
-        if i and right:
-            i -= 1
-            right -= 1
-            cost += 1
-
-        if i and left:
-            removed = min(left, i)
-            if removed:
-                cost += removed + 1
-            i -= removed
-        if i and right:
-            removed = min(right, i)
-            if removed:
-                cost += removed + 1
-            i -= removed
-        elif i:
-            debug(i, left, right, "err1 zzzzzzzzzzzzz")
-            exit(1)
-        if i:
-            debug("err 2 aaaaaaa", i)
-            exit(1)
-        # debug(cost)
-        return cost <= m
-
-    lo = 1
-    hi = n
-    while lo < hi:
-        mid = (lo + hi) // 2
-        # debug(lo, hi, mid)
-        if f(n, m, k, mid):
-            lo = mid + 1
-        else:
-            hi = mid - 1
-    if f(n, m, k, lo):
-        p(lo)
-    else:
-        p(lo - 1)
+    n = input()
+    a = list(map(int, input().split()))
 
 
 def check():
@@ -811,9 +753,10 @@ def all_factors(n):
     ret = []
     i = 1
     while i * i <= n:
-        ret.append(i)
-        if i != n // i:
-            ret.append(n // i)
+        if n % i < 1:
+            ret.append(i)
+            if i != n // i:
+                ret.append(n // i)
         i += 1
     return sorted(ret)
 
