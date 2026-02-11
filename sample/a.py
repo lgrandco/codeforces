@@ -20,18 +20,9 @@ interactive = False
 
 
 def solve():
-    # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
-    # for i in range(k):
-    #     u, v = map(int, input().split())
-    #     a, b, c = map(int, input().split())
-    # n, m, k = map(int, input().split())
-    # a = [e for e in input()]
+    n, *_ = map(int, input().split())
     a = list(map(int, input().split()))
-    # b = list(map(int, input().split()))
     # a = input()
-    # b = input()
 
 
 def gen():
@@ -47,9 +38,10 @@ def gen():
 
 
 def brute():
-    n = input()
+    n, *_ = map(int, input().split())
     a = list(map(int, input().split()))
-
+    # a = input()
+    
 
 def check():
     # n = input()

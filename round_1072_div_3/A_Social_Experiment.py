@@ -19,8 +19,8 @@ interactive = False
 
 def solve():
     # for _ in range(int(input())):
-    n = int(input())
-    # n, k = map(int, input().split())
+    # n = int(input())
+    n, *_ = map(int, input().split())
     # for i in range(k):
     #     u, v = map(int, input().split())
     #     a, b, c = map(int, input().split())
