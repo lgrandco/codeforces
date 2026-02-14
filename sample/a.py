@@ -20,7 +20,7 @@ interactive = False
 
 
 def solve():
-    n, *_ = map(int, input().split())
+    *_, n = map(int, input().split())
     a = list(map(int, input().split()))
     # a = input()
 
@@ -41,7 +41,7 @@ def brute():
     n, *_ = map(int, input().split())
     a = list(map(int, input().split()))
     # a = input()
-    
+
 
 def check():
     # n = input()
