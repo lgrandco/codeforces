@@ -20,28 +20,17 @@ interactive = False
 
 
 def solve():
-    *_, n, x, y = map(int, input().split())
-    a = list(map(int, input().split()))
-    # ans = "YES"
-    # for i, e in enumerate(a):
-    #     if abs(i - (e - 1)) % gcd(x, y) > 0:
-    #         ans = "NO"
-    #         break
-    # p(ans)
-
-    dsu = DisjointSetUnion(n)
-
-    for i in range(n):
-        if i + x < n:
-            dsu.union(i, i + x)
-        if i + y < n:
-            dsu.union(i, i + y)
-    ans = "YES"
-    for i in range(n):
-        if dsu.find(i) != dsu.find(a[i] - 1):
-            ans = "NO"
-            break
-    p(ans)
+    *_, n, q = map(int, input().split())
+    s = input()
+    pref = [0]
+    last = None
+    for e in s:
+        pref.append(pref[-1] + (e == last))
+        last = e
+    # p(pref)
+    for i in range(q):
+        l, r, k = list(map(int, input().split()))
+        p(pref[r] - pref[l] <= k * 2)
 
     # a = input()
 

@@ -23,12 +23,24 @@ def solve():
     *_, n, m = map(int, input().split())
     a = list(map(int, input().split()))
     b = list(map(int, input().split()))
+    b.append(0)
     b.sort()
     pref = [0]
+    right = -1
     for e in a:
         pref.append(pref[-1] + e)
-    x = sum(a)
-    p(sum(a))
+    x = 0
+    for left in b[::-1]:
+        # print(pref, left)
+        # print(left, right, pref, pref[right] - pref[left])
+        if right != -1:
+            x += max(pref[right] - pref[left], -(pref[right] - pref[left]))
+        else:
+            x += pref[right] - pref[left]
+        right = left
+
+    p(x)
+
     # a = input()
 
 
